@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import ThemeToggle from "@/app/components/ThemeToggle";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/app/lib/auth-client";
 
 const publicLinks = [
   { name: "Home", href: "/" },
@@ -112,7 +112,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-line bg-paper/95 backdrop-blur-md dark:border-white/10 dark:bg-ink/95">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+        className="mx-auto flex h-19 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
         <Link
           href="/"

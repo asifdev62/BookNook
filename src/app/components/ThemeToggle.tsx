@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-import { useMounted } from "@/lib/use-mounted";
+import { useMounted } from "@/app/lib/use-mounted";
 
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -26,7 +26,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
           <Moon size={19} aria-hidden="true" />
         )
       ) : (
-        <span className="h-[19px] w-[19px]" aria-hidden="true" />
+        <span className="h-4.75 w-4.75" aria-hidden="true" />
       )}
     </button>
   );

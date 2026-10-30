@@ -9,8 +9,8 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 
-import { useMounted } from "@/lib/use-mounted";
-import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
+import { useMounted } from "@/app/lib/use-mounted";
+import { usePrefersReducedMotion } from "@/app/lib/use-prefers-reduced-motion";
 
 type Slide = {
   subtitle: string;
@@ -54,7 +54,7 @@ function SlideContent({
   priority?: boolean;
 }) {
   return (
-    <div className="relative flex min-h-[620px] items-center bg-ink md:min-h-[700px]">
+    <div className="relative flex min-h-155 items-center bg-ink md:min-h-175">
       <Image
         src={slide.image}
         alt=""
@@ -66,7 +66,7 @@ function SlideContent({
 
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/75 to-ink/20"
+        className="absolute inset-0 bg-linear-to-r from-ink/95 via-ink/75 to-ink/20"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 md:px-12">
