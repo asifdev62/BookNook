@@ -6,12 +6,35 @@ import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 import AuthShell from "@/app/components/auth/AuthShell";
+import { redirect } from "next/navigation";
+import { authClient } from "../lib/auth-client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+
+  const handleSignIn = async (e:React.SubmitEvent<HTMLElement>)=>{
+    e.preventDefault()
+  
+    const formData = new FormData(e.target)
+    const user = Object.fromEntries(formData.entries()) as {email: string, password: string}
+   
+  
+    const {data, error} = await authClient.signIn.email({
+      ...user
+    })
+  
+    if(data){
+      redirect('/')
+    
+    }
+  
+    if(error){
+      console.log(error)
+    }
+  }
   return (
     <AuthShell
       eyebrow="Welcome back"
@@ -30,7 +53,7 @@ export default function LoginPage() {
       }
     >
       <form
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={handleSignIn}
         className="space-y-3"
       >
         {/* Email */}

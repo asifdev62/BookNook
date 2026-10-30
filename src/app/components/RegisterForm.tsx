@@ -41,7 +41,7 @@ const handleSignUp = async (e:React.SubmitEvent<HTMLElement>)=>{
 
   if(data){
     redirect('/')
-    console.log(data)
+  
   }
 
   if(error){
