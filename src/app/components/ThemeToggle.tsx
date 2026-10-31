@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import { Moon, Sun } from "lucide-react";
@@ -8,8 +11,14 @@ import { useMounted } from "@/app/lib/use-mounted";
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
-  const isDark = resolvedTheme === "dark";
-  const label = isDark ? "Switch to light theme" : "Switch to dark theme";
+
+  const isDark = mounted && resolvedTheme === "dark";
+
+  const label = !mounted
+    ? "Toggle theme"
+    : isDark
+      ? "Switch to light theme"
+      : "Switch to dark theme";
 
   return (
     <button
@@ -31,3 +40,4 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
     </button>
   );
 }
+

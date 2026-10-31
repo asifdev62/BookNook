@@ -1,5 +1,6 @@
+
+
 import Link from "next/link";
-import { cacheLife } from "next/cache";
 import {
   ArrowUpRight,
   BookOpen,
@@ -37,15 +38,12 @@ const socialLinks = [
   },
 ];
 
-async function getCopyrightYear() {
-  "use cache";
-  cacheLife("days");
-
+function getCopyrightYear() {
   return new Date().getFullYear();
 }
 
-export default async function Footer() {
-  const year = await getCopyrightYear();
+export default function Footer() {
+  const year = getCopyrightYear();
 
   return (
     <footer className="bg-ink text-cream">
@@ -211,3 +209,5 @@ export default async function Footer() {
     </footer>
   );
 }
+
+
