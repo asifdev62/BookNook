@@ -10,34 +10,45 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # BookNook
 
-A single-page Next.js 16 landing page for a book-sharing library. Only `/` is implemented; the Navbar and Footer still link to routes such as `/books`, `/login`, `/register`, `/add-book`, `/my-books`, and `/my-borrows`, which do not exist yet.
+Next.js 16 App Router frontend for a book-sharing library. Catalog data comes from a separate API at `http://localhost:5000`; accounts use better-auth + MongoDB. Implemented routes: `/`, `/books`, `/books/[id]`, `/add-book`, `/login`, `/register`, and `/api/auth/[...all]`. Navbar/Footer also link to `/my-books`, `/my-borrows`, and `/profile`, which do not exist yet.
 
 ## Commands
 
-- `npm run dev` — Turbopack dev server on :3000. `next dev` rewrites the managed blocks in this file; keep them committed.
-- `npm run build` — production build; it also runs TypeScript.
+- `npm run dev` — Turbopack dev server on :3000. `next dev` rewrites the managed block above; keep it committed.
+- `npm run build` — production build; it also runs TypeScript. It succeeds without the book API running because `/` and `/books` are dynamic.
 - `npm run typecheck` — `tsc --noEmit`.
 - `npm run lint` — bare `eslint` with the flat config. There is no test runner or CI.
 - Node >= 20.9 is required by Next 16.4.3. Use npm; `package-lock.json` is the lockfile.
 
-## Next.js 16 configuration
+## Runtime prerequisites
 
-- `next.config.ts` enables `cacheComponents`, `partialPrefetching`, `reactCompiler`, and `experimental.agentFeedback`. Do not disable these to work around an error.
-- Cache Components forbids unstable values during prerender (`new Date()`, `Math.random()`, etc.). `Footer` gets the copyright year through a `"use cache"` function with `cacheLife("days")`; keep that pattern.
-- `next/image` remote images are allowlisted to `images.unsplash.com` only; add other hosts in `next.config.ts`.
+- `.env` (gitignored) must provide `MONGODB_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
+- `src/app/lib/auth.ts` creates a Mongo client from `MONGODB_URL`, uses database `booknook`, and enables email/password auth. `src/app/api/auth/[...all]/route.ts` exposes it via `toNextJsHandler`.
+- `src/app/lib/auth-client.ts` hardcodes `baseURL: "http://localhost:3000"`. Update it if the dev server runs elsewhere.
+- The book API is hardcoded to `http://localhost:5000` in `books/page.tsx`, `books/[id]/page.tsx`, `books/NewArrivalBooks.tsx`, and `add-book/page.tsx`. Start it before expecting catalog data or add-book to work.
+- `NewArrivalBooks` does not catch fetch failures (unlike the books pages), so the API being down breaks `/` at runtime.
+- `next/image` allows only `images.unsplash.com` and `covers.openlibrary.org`; add other hosts in `next.config.ts`.
+
+## Next.js 16 notes
+
+- `cacheComponents` and `partialPrefetching` are currently **false**; `reactCompiler` and `experimental.agentFeedback` are on. Do not disable these to work around an error.
+- `params` and `searchParams` are Promises: await them (`books/[id]`, `books/page.tsx`).
+- Route types are generated (`LayoutProps<"/">`, `.next/types`); run `typecheck` after route changes.
 
 ## Architecture
 
-- App Router lives in `src/app`; `@/*` maps to `src/*`. Home components are under `src/app/components/home/`.
-- `layout.tsx` wraps the app in `providers.tsx` (`next-themes`), then renders `Navbar`, `<main>`, and `Footer`.
-- `Banner.tsx` is a client component using Swiper. It renders a static first slide during SSR/hydration via `useMounted`, so the hero is never blank. Autoplay is disabled when `prefers-reduced-motion` is set.
-- `ThemeToggle.tsx` toggles the `class` strategy used by `next-themes`. `globals.css` defines the matching `@custom-variant dark`.
-- `src/lib/auth-client.ts` is the only auth code: a better-auth React client. There is no server auth route, database, or env setup, so sessions do not work end-to-end yet.
+- App Router is `src/app`; `@/*` maps to `src/*`. Imports use `@/app/...`, and shared helpers live in `src/app/lib/`, not `src/lib/`.
+- `layout.tsx` renders `providers.tsx` (`next-themes`, class strategy), `Navbar`, `<main>`, and `Footer`.
+- Home is `Banner` (Swiper, static first slide via `useMounted`, autoplay off under `prefers-reduced-motion`) + `NewArrivalBooks` + `Categories`.
+- Book records use `bookName`, `author`, `category`, `price`, `rating`, `image`, `publishedYear`, `availableCopies`, and `isNewArrival`; the shape is redeclared in several files. The detail endpoint accepts either a bare book or `{ book }`.
+- Auth UI is client-side: `authClient.useSession()` gates Navbar links and add-book; login/register call `signIn.email` / `signUp.email` then `redirect("/")`.
+- `src/app/books/page.tsx` and `books/[id]/page.tsx` contain large commented-out earlier versions at the top. Edit the live code below them.
 
 ## Styling
 
-- Tailwind CSS v4 plus daisyUI 5, configured CSS-first in `globals.css`. There is no `tailwind.config`.
-- Use the semantic tokens in `@theme` (`paper`, `ink`, `navy`, `slate`, `muted`, `line`, `teal`, `brass`, `cream`) instead of raw hex values.
-- Headings use `font-serif`, mapped to Fraunces via `--font-serif`; body text uses Geist.
-- `brass` (`#D6A85F`) is for accents on dark backgrounds. For small text on the light `paper` background, use `brass-dark` (`#8A5A16`) to keep contrast.
-- Dark mode uses explicit `dark:` variants; there are no CSS-variable theme swaps.
+- Tailwind CSS v4 + daisyUI 5, configured CSS-first in `globals.css`; there is no `tailwind.config`. It also imports `shadcn/tailwind.css` and defines `@custom-variant dark` for the class strategy.
+- Prefer the `@theme` tokens (`paper`, `paper-2`, `ink`, `ink-2`, `navy`, `slate`, `muted`, `line`, `teal`, `brass`, `brass-dark`, `cream`, `danger`) over raw hex. Some book/auth pages still use raw hex; match the surrounding file rather than mass-converting.
+- Headings use `font-serif` (Fraunces); body text uses Geist.
+- `brass` (`#D6A85F`) is for accents on dark backgrounds; use `brass-dark` (`#8A5A16`) for small text on `paper`.
+- Dark mode uses explicit `dark:` variants, not CSS-variable theme swaps.
+- shadcn is configured (`components.json`, `base-nova`, base-ui). Its `@/lib` and `@/hooks` aliases point at `src/lib`/`src/hooks`, which do not exist; shared helpers are in `src/app/lib`. Check generated paths and imports before adding components.

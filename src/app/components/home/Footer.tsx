@@ -18,7 +18,13 @@ const quickLinks = [
   { name: "My Borrows", href: "/my-borrows" },
 ];
 
-const categories = ["Fiction", "Science", "History", "Kids", "Others"];
+const categories = [
+  "Fiction",
+  "Fantasy",
+  "Finance",
+  "Programming",
+  "Self-Help",
+];
 
 const socialLinks = [
   {

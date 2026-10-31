@@ -1,121 +1,110 @@
-
 import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
-  BookText,
   BriefcaseBusiness,
   Code2,
-  FlaskConical,
-  Heart,
-  History,
-  Landmark,
   Lightbulb,
   Sparkles,
-  Telescope,
-  UserRound,
 } from "lucide-react";
 
-const categories = [
-  {
-    name: "Fiction",
-    description: "Explore unforgettable stories, novels, and imaginary worlds.",
+async function getCategories(): Promise<string[]> {
+  try {
+    const res = await fetch("http://localhost:5000/categories", {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const data = await res.json();
+
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+// Each category gets its own icon, colors, and description.
+function getCategoryInfo(name: string) {
+  if (name === "Fiction") {
+    return {
+      name: "Fiction",
+      description:
+        "Explore unforgettable stories, novels, and imaginary worlds.",
+      icon: BookOpen,
+      color: "bg-[#F4E8D8]",
+      iconColor: "text-[#8B623D]",
+      slug: "Fiction",
+    };
+  }
+
+  if (name === "Fantasy") {
+    return {
+      name: "Fantasy",
+      description:
+        "Step into magical worlds, mythical creatures, and epic adventures.",
+      icon: Sparkles,
+      color: "bg-[#E9E2F3]",
+      iconColor: "text-[#74579B]",
+      slug: "Fantasy",
+    };
+  }
+
+  if (name === "Finance") {
+    return {
+      name: "Finance",
+      description:
+        "Learn about money, investing, and building financial freedom.",
+      icon: BriefcaseBusiness,
+      color: "bg-[#E0E8E9]",
+      iconColor: "text-[#416A70]",
+      slug: "Finance",
+    };
+  }
+
+  if (name === "Programming") {
+    return {
+      name: "Programming",
+      description:
+        "Discover coding, software development, and computer science.",
+      icon: Code2,
+      color: "bg-[#DFEAF3]",
+      iconColor: "text-[#315A7D]",
+      slug: "Programming",
+    };
+  }
+
+  if (name === "Self-Help") {
+    return {
+      name: "Self-Help",
+      description:
+        "Build better habits and unlock your personal potential.",
+      icon: Lightbulb,
+      color: "bg-[#F5EED8]",
+      iconColor: "text-[#92762D]",
+      slug: "Self-Help",
+    };
+  }
+
+  // This fallback is used if a new category is added to MongoDB later.
+  return {
+    name: name,
+    description: `Explore our ${name} books.`,
     icon: BookOpen,
-    color: "bg-[#F4E8D8]",
-    iconColor: "text-[#8B623D]",
-    slug: "Fiction",
-  },
-  {
-    name: "Technology",
-    description: "Discover programming, software development, and technology.",
-    icon: Code2,
-    color: "bg-[#DFEAF3]",
-    iconColor: "text-[#315A7D]",
-    slug: "Technology",
-  },
-  {
-    name: "Science",
-    description: "Understand the universe through scientific discoveries.",
-    icon: FlaskConical,
-    color: "bg-[#E1EEE7]",
-    iconColor: "text-[#39765A]",
-    slug: "Science",
-  },
-  {
-    name: "History",
-    description: "Travel through time and discover stories from the past.",
-    icon: History,
-    color: "bg-[#F2E3E0]",
-    iconColor: "text-[#99594E]",
-    slug: "History",
-  },
-  {
-    name: "Biography",
-    description: "Learn from the lives of remarkable people.",
-    icon: UserRound,
-    color: "bg-[#E9E2F3]",
-    iconColor: "text-[#74579B]",
-    slug: "Biography",
-  },
-  {
-    name: "Business",
-    description: "Explore entrepreneurship, leadership, and business strategy.",
-    icon: BriefcaseBusiness,
-    color: "bg-[#E0E8E9]",
-    iconColor: "text-[#416A70]",
-    slug: "Business",
-  },
-  {
-    name: "Self-Development",
-    description: "Build better habits and unlock your personal potential.",
-    icon: Lightbulb,
-    color: "bg-[#F5EED8]",
-    iconColor: "text-[#92762D]",
-    slug: "Self-Development",
-  },
-  {
-    name: "Romance",
-    description: "Discover heartfelt stories about love and relationships.",
-    icon: Heart,
-    color: "bg-[#F5E1E8]",
-    iconColor: "text-[#A34F70]",
-    slug: "Romance",
-  },
-  {
-    name: "Education",
-    description: "Find learning resources to expand your knowledge.",
-    icon: BookText,
-    color: "bg-[#E2E8F5]",
-    iconColor: "text-[#4B639A]",
-    slug: "Education",
-  },
-  {
-    name: "Astronomy",
-    description: "Explore stars, planets, galaxies, and the cosmos.",
-    icon: Telescope,
-    color: "bg-[#E2E4F4]",
-    iconColor: "text-[#535B9B]",
-    slug: "Astronomy",
-  },
-  {
-    name: "Philosophy",
-    description: "Explore ideas, wisdom, and life's biggest questions.",
-    icon: Landmark,
-    color: "bg-[#EDE6DC]",
-    iconColor: "text-[#79674D]",
-    slug: "Philosophy",
-  },
-  {
-    name: "General",
-    description: "Discover more books across a variety of subjects.",
-    icon: Sparkles,
     color: "bg-[#E6E9E5]",
     iconColor: "text-[#5E715B]",
-    slug: "General",
-  },
-];
+    slug: name,
+  };
+}
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const categoryNames = await getCategories();
+
+  // Turn each category name from MongoDB into a category card.
+  const categories = categoryNames.map((name) => getCategoryInfo(name));
+
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#172A3A]">
       {/* Hero Section */}
@@ -200,7 +189,11 @@ export default function CategoriesPage() {
                   <div
                     className={`flex h-14 w-14 items-center justify-center ${category.color}`}
                   >
-                    <Icon size={26} strokeWidth={1.6} className={category.iconColor} />
+                    <Icon
+                      size={26}
+                      strokeWidth={1.6}
+                      className={category.iconColor}
+                    />
                   </div>
 
                   <span className="font-serif text-sm text-[#172A3A]/30">

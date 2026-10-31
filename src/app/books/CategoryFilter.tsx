@@ -1,28 +1,17 @@
-
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
-const categories = [
-  "All Categories",
-  "Fiction",
-  "Technology",
-  "Science",
-  "History",
-  "Biography",
-  "Business",
-  "Self-Development",
-  "Romance",
-  "Education",
-  "Astronomy",
-  "Philosophy",
-];
+interface CategoryFilterProps {
+  categories: string[];
+}
 
-export default function CategoryFilter() {
+export default function CategoryFilter({ categories }: CategoryFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // If there is no category in the URL, show "All Categories".
   const selectedCategory =
     searchParams.get("category") || "All Categories";
 
@@ -44,9 +33,12 @@ export default function CategoryFilter() {
     <div className="relative w-full sm:w-64">
       <select
         value={selectedCategory}
-        onChange={(e) => handleCategoryChange(e.target.value)}
+        onChange={(event) => handleCategoryChange(event.target.value)}
         className="w-full appearance-none border border-[#C59D5F]/50 bg-white px-5 py-3.5 pr-11 text-sm text-[#172A3A] outline-none transition focus:border-[#C59D5F]"
       >
+        {/* This option removes the category from the URL. */}
+        <option value="All Categories">All Categories</option>
+
         {categories.map((category) => (
           <option key={category} value={category}>
             {category}
