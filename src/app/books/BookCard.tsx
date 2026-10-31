@@ -54,26 +54,27 @@ export default function BookCard({ book }: BookCardProps) {
           <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-[#C59D5F]/10" />
 
           {/* Book Image */}
-          <div className="relative z-10 h-full transition-transform duration-700 ease-out group-hover:scale-105 group-hover:-rotate-2">
+  {/* Book Image */}
+<div className="relative z-10 h-full transition-transform duration-700 ease-out group-hover:scale-105 group-hover:-rotate-2">
             <Image
               src={book.image}
               alt={book.bookName}
               width={180}
               height={240}
-              className="h-full w-auto max-w-full object-contain drop-shadow-[0_15px_15px_rgba(23,42,58,0.25)]"
+              className="h-full w-auto max-w-full object-cover drop-shadow-[0_15px_15px_rgba(23,42,58,0.25)]"
             />
           </div>
 
           {/* New Arrival Badge */}
           {book.isNewArrival && (
-            <span className="absolute left-4 top-4 z-20 flex items-center gap-1.5 bg-[#172A3A] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-white shadow-md">
+            <span className="absolute left-2 top-2 z-20 flex items-center gap-1.5 bg-[#172A3A] px-1 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-white shadow-md rounded-xl">
               <span className="h-1.5 w-1.5 rounded-full bg-[#C59D5F]" />
               New Arrival
             </span>
           )}
 
           {/* Category Badge */}
-          <span className="absolute bottom-4 left-4 z-20 border border-[#E8E1D5] bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#172A3A] backdrop-blur-sm">
+          <span className="absolute bottom-2 left-2 z-20 border border-[#C59D5F] bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#172A3A] backdrop-blur-sm rounded-xl">
             {book.category}
           </span>
 
