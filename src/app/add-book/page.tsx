@@ -1,5 +1,4 @@
 
-
 // "use client";
 
 // import { useState } from "react";
@@ -10,23 +9,43 @@
 //   BookPlus,
 //   UserRound,
 //   Mail,
-//   Upload,
 //   Library,
 // } from "lucide-react";
+// import { redirect } from "next/navigation";
+
 
 // export default function AddBookPage() {
 //   const { data: session, isPending } = authClient.useSession();
 //   const user = session?.user;
 
+//   const categories = [
+//     "Fiction",
+//     "Self-Help",
+//     "Finance",
+//     "Programming",
+//     "Fantasy",
+//     "Science",
+//     "History",
+//     "Biography",
+//     "Romance",
+//     "Education",
+//     "Technology",
+//     "Philosophy",
+//     "Business",
+//   ];
+
 //   const [formData, setFormData] = useState({
-//     title: "",
+//     bookName: "",
 //     author: "",
 //     category: "Fiction",
-//     totalCopies: "1",
+//     rating: "4.5",
+//     image: "",
 //     description: "",
+//     publishedYear: "",
+//     availableCopies: "1",
+//     isNewArrival: true,
 //   });
 
-//   const [bookImage, setBookImage] = useState<File | null>(null);
 //   const [form, setForm] = useState("");
 //   const [submitting, setSubmitting] = useState(false);
 
@@ -54,10 +73,11 @@
 
 //     const bookData = {
 //       ...formData,
-//       totalCopies: Number(formData.totalCopies),
+//       rating: Number(formData.rating),
+//       publishedYear: Number(formData.publishedYear),
+//       availableCopies: Number(formData.availableCopies),
 //       userName: user.name ?? "",
 //       userEmail: user.email ?? "",
-      
 //     };
 
 //     try {
@@ -72,7 +92,6 @@
 //       });
 
 //       const data = await res.json();
-//       console.log(data);
 
 //       if (!res.ok) {
 //         setForm(data.message || "Failed to add book.");
@@ -80,14 +99,19 @@
 //       }
 
 //       setForm("Book added successfully!");
+//       redirect('/books')
+
 //       setFormData({
-//         title: "",
+//         bookName: "",
 //         author: "",
 //         category: "Fiction",
-//         totalCopies: "1",
+//         rating: "4.5",
+//         image: "",
 //         description: "",
+//         publishedYear: "",
+//         availableCopies: "1",
+//         isNewArrival: true,
 //       });
-//       setBookImage(null);
 //     } catch (error) {
 //       console.error(error);
 //       setForm("Could not connect to the server.");
@@ -102,13 +126,13 @@
 //   const labelClass = "mb-1 block text-xs font-medium text-[#F1E8D7]";
 
 //   return (
-//     <main className="min-h-screen bg-[#0B141A] px-3 py-4 text-[#F8F5EE] sm:px-4 sm:py-5">
+//     <main className="min-h-screen bg-linear-to-br from-[#0B141A] via-[#14252C] to-[#1B3038] px-3 py-4 text-[#F8F5EE] sm:px-4 sm:py-5">
+    
 //       <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-[#526575]/40 bg-[#172A35] shadow-2xl shadow-black/30">
-//         {/* Top Accent */}
-//         <div className="h-0.5 w-full bg-gradient-to-r from-[#1C6656] via-[#D6A85F] to-[#1C6656]" />
 
-//         {/* Header */}
-//         <header className="border-b border-[#526575]/40 bg-gradient-to-br from-[#1C3340] to-[#172A35] px-4 py-3 text-center">
+//         <div className="h-0.5 w-full bg-linear-to-r from-[#1C6656] via-[#D6A85F] to-[#1C6656]" />
+
+//         <header className="border-b border-[#526575]/40 bg-linear-to-br from-[#1C3340] to-[#172A35] px-4 py-3 text-center">
 //           <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-[#D6A85F]/30 bg-[#D6A85F]/10">
 //             <BookOpen size={19} strokeWidth={1.7} className="text-[#D6A85F]" />
 //           </div>
@@ -126,9 +150,8 @@
 //           </p>
 //         </header>
 
-//         {/* Form */}
 //         <form onSubmit={handleSubmit} className="space-y-3 p-4 sm:p-5">
-//           {/* Book Information */}
+
 //           <div className="flex items-center gap-2">
 //             <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#D6A85F]/10">
 //               <Library size={15} className="text-[#D6A85F]" />
@@ -138,25 +161,24 @@
 //               <h2 className="font-serif text-sm font-semibold text-[#F8F5EE]">
 //                 Book Information
 //               </h2>
-
 //               <p className="text-[10px] text-gray-400">
 //                 Enter your book details.
 //               </p>
 //             </div>
 //           </div>
 
-//           {/* Title & Author */}
+//           {/* Book Name & Author */}
 //           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
 //             <div>
-//               <label htmlFor="title" className={labelClass}>
+//               <label htmlFor="bookName" className={labelClass}>
 //                 Book Title
 //               </label>
 
 //               <input
-//                 id="title"
-//                 name="title"
+//                 id="bookName"
+//                 name="bookName"
 //                 type="text"
-//                 value={formData.title}
+//                 value={formData.bookName}
 //                 onChange={handleChange}
 //                 placeholder="Enter book title"
 //                 className={inputClass}
@@ -182,78 +204,129 @@
 //             </div>
 //           </div>
 
-//           {/* Category & Copies */}
+//           {/* Category & Price */}
 //           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
 //             <div>
 //               <label htmlFor="category" className={labelClass}>
 //                 Category
 //               </label>
 
-//               <input
+//               <select
 //                 id="category"
 //                 name="category"
-//                 type="text"
-//                 className={inputClass}
-//                 value={formData.author}
+//                 value={formData.category}
 //                 onChange={handleChange}
-//                 placeholder="category name"
+//                 className={inputClass}
 //                 required
 //               >
-                
-                
-//               </input>
+//                 {categories.map((category) => (
+//                   <option key={category} value={category}>
+//                     {category}
+//                   </option>
+//                 ))}
+//               </select>
 //             </div>
 
+//           </div>
+
+//           {/* Rating & Published Year */}
+//           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
 //             <div>
-//               <label htmlFor="totalCopies" className={labelClass}>
-//                 Total Copies
+//               <label htmlFor="rating" className={labelClass}>
+//                 Rating (0-5)
 //               </label>
 
 //               <input
-//                 id="totalCopies"
-//                 name="totalCopies"
+//                 id="rating"
+//                 name="rating"
 //                 type="number"
-//                 min="1"
-//                 value={formData.totalCopies}
+//                 min="0"
+//                 max="5"
+//                 step="0.1"
+//                 value={formData.rating}
 //                 onChange={handleChange}
+//                 className={inputClass}
+//                 required
+//               />
+//             </div>
+
+//             <div>
+//               <label htmlFor="publishedYear" className={labelClass}>
+//                 Published Year
+//               </label>
+
+//               <input
+//                 id="publishedYear"
+//                 name="publishedYear"
+//                 type="number"
+//                 min="1000"
+//                 max={new Date().getFullYear()}
+//                 value={formData.publishedYear}
+//                 onChange={handleChange}
+//                 placeholder="e.g. 2011"
 //                 className={inputClass}
 //                 required
 //               />
 //             </div>
 //           </div>
 
-//           {/* Book Image */}
-//           <div>
-//             <label htmlFor="bookImage" className={labelClass}>
-//               Book Cover Image
-//             </label>
-
-//             <label
-//               htmlFor="bookImage"
-//               className="flex cursor-pointer items-center gap-3 rounded-md border border-dashed border-[#526575] bg-[#293F50]/50 px-3 py-2 transition hover:border-[#D6A85F] hover:bg-[#293F50]"
-//             >
-//               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D6A85F]/10">
-//                 <Upload size={16} className="text-[#D6A85F]" />
-//               </div>
-
-//               <div className="min-w-0">
-//                 <p className="truncate text-xs font-medium text-[#F8F5EE]">
-//                   {bookImage ? bookImage.name : "Click to upload book cover"}
-//                 </p>
-
-//                 <p className="mt-0.5 text-[10px] text-gray-400">
-//                   PNG, JPG or WEBP
-//                 </p>
-//               </div>
+//           {/* Available Copies & New Arrival */}
+//           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+//             <div>
+//               <label htmlFor="availableCopies" className={labelClass}>
+//                 Available Copies
+//               </label>
 
 //               <input
-//                 id="bookImage"
-//                 type="file"
-//                 accept="image/png,image/jpeg,image/webp"
-//                 className="hidden"
-//                 onChange={(e) => setBookImage(e.target.files?.[0] ?? null)}
+//                 id="availableCopies"
+//                 name="availableCopies"
+//                 type="number"
+//                 min="1"
+//                 value={formData.availableCopies}
+//                 onChange={handleChange}
+//                 className={inputClass}
+//                 required
 //               />
+//             </div>
+
+//             <div>
+//               <label className={labelClass}>
+//                 New Arrival
+//               </label>
+
+//               <select
+//                 name="isNewArrival"
+//                 value={String(formData.isNewArrival)}
+//                 onChange={(e) =>
+//                   setFormData((prev) => ({
+//                     ...prev,
+//                     isNewArrival: e.target.value === "true",
+//                   }))
+//                 }
+//                 className={inputClass}
+//               >
+//                 <option value="true">Yes</option>
+//                 <option value="false">No</option>
+//               </select>
+//             </div>
+//           </div>
+
+//           {/* Book Image URL */}
+//           <div>
+//             <label htmlFor="image" className={labelClass}>
+//               Book Cover Image URL
 //             </label>
+
+//             <input
+//               id="image"
+//               name="image"
+//               type="url"
+//               value={formData.image}
+//               onChange={handleChange}
+//               placeholder="https://example.com/book-cover.jpg"
+//               className={inputClass}
+//               required
+//             />
 //           </div>
 
 //           {/* Description */}
@@ -311,7 +384,6 @@
 //               </div>
 //             ) : (
 //               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-//                 {/* Logged-in User Name */}
 //                 <div>
 //                   <label htmlFor="userName" className={labelClass}>
 //                     User Name
@@ -333,7 +405,6 @@
 //                   </div>
 //                 </div>
 
-//                 {/* Logged-in User Email */}
 //                 <div>
 //                   <label htmlFor="userEmail" className={labelClass}>
 //                     User Email
@@ -395,6 +466,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/app/lib/auth-client";
 import {
@@ -406,6 +478,7 @@ import {
 } from "lucide-react";
 
 export default function AddBookPage() {
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
@@ -429,7 +502,6 @@ export default function AddBookPage() {
     bookName: "",
     author: "",
     category: "Fiction",
-    price: "",
     rating: "4.5",
     image: "",
     description: "",
@@ -465,7 +537,6 @@ export default function AddBookPage() {
 
     const bookData = {
       ...formData,
-      price: Number(formData.price),
       rating: Number(formData.rating),
       publishedYear: Number(formData.publishedYear),
       availableCopies: Number(formData.availableCopies),
@@ -491,13 +562,10 @@ export default function AddBookPage() {
         return;
       }
 
-      setForm("Book added successfully!");
-
       setFormData({
         bookName: "",
         author: "",
         category: "Fiction",
-        price: "",
         rating: "4.5",
         image: "",
         description: "",
@@ -505,6 +573,8 @@ export default function AddBookPage() {
         availableCopies: "1",
         isNewArrival: true,
       });
+
+      router.push("/books");
     } catch (error) {
       console.error(error);
       setForm("Could not connect to the server.");
@@ -516,17 +586,21 @@ export default function AddBookPage() {
   const inputClass =
     "w-full rounded-md border border-[#526575]/60 bg-[#293F50] px-3 py-1.5 text-xs text-[#F8F5EE] outline-none transition placeholder:text-gray-400 focus:border-[#D6A85F] focus:ring-1 focus:ring-[#D6A85F]/20";
 
-  const labelClass = "mb-1 block text-xs font-medium text-[#F1E8D7]";
+  const labelClass =
+    "mb-1 block text-xs font-medium text-[#F1E8D7]";
 
   return (
-    <main className="min-h-screen bg-[#0B141A] px-3 py-4 text-[#F8F5EE] sm:px-4 sm:py-5">
+    <main className="min-h-screen bg-linear-to-br from-[#0B141A] via-[#14252C] to-[#1B3038] px-3 py-4 text-[#F8F5EE] sm:px-4 sm:py-5">
       <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-[#526575]/40 bg-[#172A35] shadow-2xl shadow-black/30">
+        <div className="h-0.5 w-full bg-linear-to-r from-[#1C6656] via-[#D6A85F] to-[#1C6656]" />
 
-        <div className="h-0.5 w-full bg-gradient-to-r from-[#1C6656] via-[#D6A85F] to-[#1C6656]" />
-
-        <header className="border-b border-[#526575]/40 bg-gradient-to-br from-[#1C3340] to-[#172A35] px-4 py-3 text-center">
+        <header className="border-b border-[#526575]/40 bg-linear-to-br from-[#1C3340] to-[#172A35] px-4 py-3 text-center">
           <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-[#D6A85F]/30 bg-[#D6A85F]/10">
-            <BookOpen size={19} strokeWidth={1.7} className="text-[#D6A85F]" />
+            <BookOpen
+              size={19}
+              strokeWidth={1.7}
+              className="text-[#D6A85F]"
+            />
           </div>
 
           <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#D6A85F]">
@@ -543,7 +617,7 @@ export default function AddBookPage() {
         </header>
 
         <form onSubmit={handleSubmit} className="space-y-3 p-4 sm:p-5">
-
+          {/* Book Information */}
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#D6A85F]/10">
               <Library size={15} className="text-[#D6A85F]" />
@@ -590,48 +664,6 @@ export default function AddBookPage() {
                 value={formData.author}
                 onChange={handleChange}
                 placeholder="Enter author name"
-                className={inputClass}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Category & Price */}
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <div>
-              <label htmlFor="category" className={labelClass}>
-                Category
-              </label>
-
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className={inputClass}
-                required
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="price" className={labelClass}>
-                Price (৳)
-              </label>
-
-              <input
-                id="price"
-                name="price"
-                type="number"
-                min="0"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="Enter book price"
                 className={inputClass}
                 required
               />
@@ -699,11 +731,12 @@ export default function AddBookPage() {
             </div>
 
             <div>
-              <label className={labelClass}>
+              <label htmlFor="isNewArrival" className={labelClass}>
                 New Arrival
               </label>
 
               <select
+                id="isNewArrival"
                 name="isNewArrival"
                 value={String(formData.isNewArrival)}
                 onChange={(e) =>
@@ -720,7 +753,30 @@ export default function AddBookPage() {
             </div>
           </div>
 
-          {/* Book Image URL */}
+          {/* Category */}
+          <div>
+            <label htmlFor="category" className={labelClass}>
+              Category
+            </label>
+
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={inputClass}
+              required
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          
+          {/* Book Cover Image */}
           <div>
             <label htmlFor="image" className={labelClass}>
               Book Cover Image URL

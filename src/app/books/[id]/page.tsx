@@ -1,19 +1,4 @@
 
-// import { ArrowLeft, ArrowUpRight, BookOpen, CalendarDays, CheckCircle2, ChevronRight, Library, ShoppingBag, Star, UserRound } from 'lucide-react';
-// import Image from 'next/image';
-// import Link from 'next/link';
-// import React from 'react';
-
-// const BookDetailPage =async ({params}) => {
-//     const {id} = await params
-
-//     const res = await fetch(`http://localhost:5000/book/${id}`)
-//     const book = await res.json()
-//     console.log(book)
-
-
-
-
 import {
     ArrowLeft,
     ArrowUpRight,
@@ -35,17 +20,14 @@ interface Book {
     bookName: string;
     author: string;
     category: string;
-    price: number;
     rating: number;
     image: string;
     description: string;
     publishedYear: number;
     availableCopies: number;
     isNewArrival: boolean;
-    addedBy: {
-        name: string,
-        email: string
-    }
+    userName?: string;
+    userEmail?: string;
 }
 
 interface BookDetailPageProps {
@@ -67,7 +49,6 @@ async function getBook(id: string): Promise<Book | null> {
 
         const data = await response.json();
 
-        // Supports either a direct book object or { book: {...} }.
         return data.book ?? data;
     } catch (error) {
         console.error("Failed to fetch book:", error);
@@ -81,7 +62,6 @@ export default async function BookDetailPage({
     const { id } = await params;
     const book = await getBook(id);
 
-    // Book Not Found
     if (!book || !book.bookName) {
         return (
             <main className="flex min-h-[70vh] items-center justify-center bg-[#FAF9F6] px-6 dark:bg-[#172A3A]">
@@ -126,10 +106,7 @@ export default async function BookDetailPage({
                         aria-label="Breadcrumb"
                         className="flex flex-wrap items-center gap-2 text-xs text-gray-500 sm:text-sm"
                     >
-                        <Link
-                            href="/"
-                            className="transition-colors hover:text-[#C59D5F]"
-                        >
+                        <Link href="/" className="transition-colors hover:text-[#C59D5F]">
                             Home
                         </Link>
 
@@ -231,7 +208,6 @@ export default async function BookDetailPage({
                                 />
 
                                 <span className="text-sm font-bold">{book.rating}</span>
-
                                 <span className="text-xs text-gray-500">/ 5</span>
                             </div>
                         </div>
@@ -255,6 +231,7 @@ export default async function BookDetailPage({
 
                         {/* Book Information Grid */}
                         <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5">
+                            {/* Published Year */}
                             <div className="border border-[#E8E1D5] bg-white p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
                                 <div className="mb-3 flex items-center gap-2 text-[#B18A4A]">
                                     <CalendarDays size={18} />
@@ -269,6 +246,7 @@ export default async function BookDetailPage({
                                 </p>
                             </div>
 
+                            {/* Category */}
                             <div className="border border-[#E8E1D5] bg-white p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
                                 <div className="mb-3 flex items-center gap-2 text-[#B18A4A]">
                                     <Library size={18} />
@@ -282,42 +260,30 @@ export default async function BookDetailPage({
                                     {book.category}
                                 </p>
                             </div>
-                            {/* Added By */}
-                            <div className="col-span-2 border border-[#E8E1D5] bg-white p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
 
-                                <div className="mb-3 flex items-center gap-2 text-[#B18A4A]">
-                                    <UserRound size={18} />
-
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-                                        Added By
-                                    </span>
-                                </div>
-
-                                <p className="font-serif text-lg font-bold">
-                                    {book.addedBy?.name || "Unknown User"}
-                                </p>
-
-                                <p className="mt-1 break-all text-sm text-gray-500">
-                                    {book.addedBy?.email || "Email not available"}
-                                </p>
-
-                            </div>
-                        </div>
-
-                        {/* Price and Availability */}
-                        <div className="mt-8 border border-[#E8E1D5] bg-white p-5 dark:border-white/10 dark:bg-white/5 sm:p-7">
-                            <div className="flex flex-wrap items-center justify-between gap-5">
+                            {/* Added By and availability*/}
+                            <div className="col-span-2 flex flex-col justify-between gap-4 border border-[#E8E1D5] bg-white p-4 dark:border-white/10 dark:bg-white/5 sm:flex-row sm:items-center sm:p-5">
+                                {/* Added By */}
                                 <div>
-                                    <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">
-                                        Book Price
+                                    <div className="mb-3 flex items-center gap-2 text-[#B18A4A]">
+                                        <UserRound size={18} />
+
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
+                                            Added By
+                                        </span>
+                                    </div>
+
+                                    <p className="font-serif text-lg font-bold">
+                                        {book.userName || "Unknown User"}
                                     </p>
 
-                                    <p className="font-serif text-3xl font-bold sm:text-4xl">
-                                        ৳{book.price.toLocaleString("en-BD")}
+                                    <p className="mt-1 break-all text-sm text-gray-500">
+                                        {book.userEmail || "Email not available"}
                                     </p>
                                 </div>
 
-                                <div className="text-right">
+                                {/* Availability */}
+                                <div className="sm:text-right">
                                     <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">
                                         Availability
                                     </p>
@@ -339,41 +305,45 @@ export default async function BookDetailPage({
                                     </span>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Action Buttons */}
-                            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                                <button
-                                    type="button"
-                                    disabled={!isAvailable}
-                                    className="flex items-center justify-center gap-2 bg-[#172A3A] px-5 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#C59D5F] disabled:cursor-not-allowed disabled:opacity-50"
-                                >
-                                    <ShoppingBag size={18} />
 
-                                    {isAvailable ? "Borrow This Book" : "Currently Unavailable"}
 
-                                    {isAvailable && <ArrowUpRight size={17} />}
-                                </button>
+                        {/* Action Buttons */}
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                            <button
+                                type="button"
+                                disabled={!isAvailable}
+                                className="flex items-center justify-center gap-2 bg-[#172A3A] px-5 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#C59D5F] disabled:cursor-not-allowed disabled:opacity-50 border border"
+                            >
+                                <ShoppingBag size={18} />
 
-                                <Link
-                                    href="/books"
-                                    className="flex items-center justify-center gap-2 border border-[#E8E1D5] px-5 py-4 text-sm font-semibold transition-colors hover:border-[#C59D5F] hover:text-[#B18A4A] dark:border-white/20"
-                                >
-                                    <BookOpen size={18} />
-                                    Explore More Books
-                                </Link>
-                            </div>
+                                {isAvailable
+                                    ? "Borrow This Book"
+                                    : "Currently Unavailable"}
 
-                            <div className="mt-5 flex items-start gap-2 border-t border-[#E8E1D5] pt-4 text-xs leading-5 text-gray-500 dark:border-white/10">
-                                <CheckCircle2
-                                    size={16}
-                                    className="mt-0.5 shrink-0 text-[#C59D5F]"
-                                />
+                                {isAvailable && <ArrowUpRight size={17} />}
+                            </button>
 
-                                <p>
-                                    Find your next favorite read and make every reading moment
-                                    meaningful with BookNook.
-                                </p>
-                            </div>
+                            <Link
+                                href="/books"
+                                className="flex items-center justify-center gap-2 border border-[#E8E1D5] px-5 py-4 text-sm font-semibold transition-colors hover:border-[#C59D5F] hover:text-[#B18A4A] dark:border-white/20"
+                            >
+                                <BookOpen size={18} />
+                                Explore More Books
+                            </Link>
+                        </div>
+
+                        <div className="mt-5 flex items-start gap-2 border-t border-[#E8E1D5] pt-4 text-xs leading-5 text-gray-500 dark:border-white/10">
+                            <CheckCircle2
+                                size={16}
+                                className="mt-0.5 shrink-0 text-[#C59D5F]"
+                            />
+
+                            <p>
+                                Find your next favorite read and make every reading moment
+                                meaningful with BookNook.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -408,4 +378,3 @@ export default async function BookDetailPage({
         </main>
     );
 }
-

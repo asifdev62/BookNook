@@ -16,7 +16,6 @@ export interface Book {
   bookName: string;
   author: string;
   category: string;
-  price: number;
   rating: number;
   image: string;
   description: string;
@@ -134,23 +133,9 @@ export default function BookCard({ book }: BookCardProps) {
           <div className="h-px flex-1 bg-[#EEE8DE]" />
         </div>
 
-        {/* Price and Availability */}
-        <div className="mb-5 flex items-center justify-between">
-
-          {/* Price */}
-          <div>
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">
-              Book Price
-            </p>
-
-            <p className="font-serif text-2xl font-bold text-[#172A3A]">
-              ৳{book.price}
-            </p>
-          </div>
-
           {/* Availability */}
-          <div className="text-right">
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">
+          <div className="text-right mb-3">
+            <p className=" text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">
               Availability
             </p>
 
@@ -170,7 +155,7 @@ export default function BookCard({ book }: BookCardProps) {
                 : "Out of Stock"}
             </span>
           </div>
-        </div>
+        
 
         {/* Explore Button */}
         <Link
