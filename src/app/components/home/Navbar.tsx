@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import Image from "next/image";
@@ -19,6 +21,7 @@ import {
 import ThemeToggle from "@/app/components/ThemeToggle";
 import { authClient } from "@/app/lib/auth-client";
 
+
 const publicLinks = [
   { name: "Home", href: "/" },
   { name: "All Books", href: "/books" },
@@ -35,58 +38,68 @@ export default function Navbar() {
   const router = useRouter();
 
   const { data: session, isPending } = authClient.useSession();
-
-  const [mobileMenu, setMobileMenu] = useState(false);
-  const [profileMenu, setProfileMenu] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);
-
   const user = session?.user;
 
+ 
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(false);
+
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  
   useEffect(() => {
     if (!profileMenu) return;
 
-    const handlePointerDown = (event: MouseEvent) => {
+    function handleClick(event: MouseEvent) {
       if (!profileRef.current?.contains(event.target as Node)) {
         setProfileMenu(false);
       }
-    };
+    }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setProfileMenu(false);
-    };
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setProfileMenu(false);
+      }
+    }
 
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [profileMenu]);
+
 
   useEffect(() => {
     if (!mobileMenu) return;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobileMenu(false);
-    };
+    const oldOverflow = document.body.style.overflow;
 
-    const previousOverflow = document.body.style.overflow;
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileMenu(false);
+      }
+    }
+
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = oldOverflow;
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [mobileMenu]);
 
-  const closeMenus = () => {
+ 
+  function closeMenus() {
     setMobileMenu(false);
     setProfileMenu(false);
-  };
+  }
 
-  const handleLogout = async () => {
+  // Logout function
+  async function handleLogout() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
@@ -96,14 +109,20 @@ export default function Navbar() {
         },
       },
     });
-  };
+  }
 
-  const isActive = (href: string) => {
+  
+  function isActive(href: string) {
     if (href.includes("#")) return false;
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
 
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname === href || pathname.startsWith(href + "/");
+  }
+
+ 
   const activeClass = "text-teal dark:text-brass";
   const inactiveClass =
     "text-slate hover:text-teal dark:text-cream-muted dark:hover:text-brass";
@@ -114,6 +133,7 @@ export default function Navbar() {
         aria-label="Main navigation"
         className="mx-auto flex h-19 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
+        {/* Logo */}
         <Link
           href="/"
           onClick={closeMenus}
@@ -132,6 +152,7 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 lg:flex">
           {publicLinks.map((link) => (
             <Link
@@ -154,6 +175,7 @@ export default function Navbar() {
             </Link>
           ))}
 
+          
           {user &&
             privateLinks.map((link) => (
               <Link
@@ -170,9 +192,11 @@ export default function Navbar() {
             ))}
         </div>
 
+        {/* Desktop Right Side */}
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle className="flex h-10 w-10 items-center justify-center rounded-full border border-line-strong text-navy transition hover:bg-paper-2 dark:border-white/20 dark:text-brass dark:hover:bg-white/10" />
 
+          {/* Session loading */}
           {isPending && (
             <div
               aria-hidden="true"
@@ -180,6 +204,7 @@ export default function Navbar() {
             />
           )}
 
+          {/* Login  Register */}
           {!isPending && !user && (
             <>
               <Link
@@ -200,11 +225,12 @@ export default function Navbar() {
             </>
           )}
 
+          {/* Profile Dropdown */}
           {user && (
             <div className="relative" ref={profileRef}>
               <button
                 type="button"
-                onClick={() => setProfileMenu((open) => !open)}
+                onClick={() => setProfileMenu(!profileMenu)}
                 aria-expanded={profileMenu}
                 aria-controls="profile-menu"
                 aria-haspopup="true"
@@ -246,6 +272,7 @@ export default function Navbar() {
                     <p className="truncate text-sm font-semibold text-navy dark:text-white">
                       {user.name}
                     </p>
+
                     <p className="truncate text-xs text-muted dark:text-cream-muted">
                       {user.email}
                     </p>
@@ -274,12 +301,13 @@ export default function Navbar() {
           )}
         </div>
 
+        {/* Mobile Right Side */}
         <div className="flex items-center gap-2 lg:hidden">
           <ThemeToggle className="flex h-10 w-10 items-center justify-center rounded-full text-navy dark:text-brass" />
 
           <button
             type="button"
-            onClick={() => setMobileMenu((open) => !open)}
+            onClick={() => setMobileMenu(!mobileMenu)}
             aria-label={mobileMenu ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileMenu}
             aria-controls="mobile-menu"
@@ -294,12 +322,14 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       {mobileMenu && (
         <div
           id="mobile-menu"
           className="max-h-[calc(100vh-76px)] overflow-y-auto overscroll-contain border-t border-line bg-paper px-5 py-5 shadow-lg dark:border-white/10 dark:bg-ink lg:hidden"
         >
           <div className="flex flex-col gap-2">
+            {/* Public links */}
             {publicLinks.map((link) => (
               <Link
                 key={link.href}
@@ -316,6 +346,7 @@ export default function Navbar() {
               </Link>
             ))}
 
+            {/* Private links */}
             {user &&
               privateLinks.map((link) => {
                 const Icon = link.icon;
@@ -340,6 +371,7 @@ export default function Navbar() {
 
             <div className="my-2 border-t border-line dark:border-white/10" />
 
+            {/* Logged out user */}
             {!isPending && !user && (
               <div className="grid grid-cols-2 gap-3">
                 <Link
@@ -360,6 +392,7 @@ export default function Navbar() {
               </div>
             )}
 
+            {/* Logged in user */}
             {user && (
               <>
                 <div className="flex items-center gap-3 px-3 py-2">
@@ -381,6 +414,7 @@ export default function Navbar() {
                     <p className="truncate text-sm font-semibold text-navy dark:text-white">
                       {user.name}
                     </p>
+
                     <p className="truncate text-xs text-muted dark:text-cream-muted">
                       {user.email}
                     </p>
@@ -411,3 +445,4 @@ export default function Navbar() {
     </header>
   );
 }
+

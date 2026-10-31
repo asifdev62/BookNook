@@ -1,4 +1,4 @@
-
+import BorrowButton from "@/app/components/BorrowButton";
 import {
     ArrowLeft,
     ArrowUpRight,
@@ -311,19 +311,7 @@ export default async function BookDetailPage({
 
                         {/* Action Buttons */}
                         <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                            <button
-                                type="button"
-                                disabled={!isAvailable}
-                                className="flex items-center justify-center gap-2 bg-[#172A3A] px-5 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#C59D5F] disabled:cursor-not-allowed disabled:opacity-50 border border"
-                            >
-                                <ShoppingBag size={18} />
-
-                                {isAvailable
-                                    ? "Borrow This Book"
-                                    : "Currently Unavailable"}
-
-                                {isAvailable && <ArrowUpRight size={17} />}
-                            </button>
+                            <BorrowButton book={book} />
 
                             <Link
                                 href="/books"

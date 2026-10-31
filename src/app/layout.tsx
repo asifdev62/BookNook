@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 import Footer from "./components/home/Footer";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Navbar />
           <main id="main-content" className="flex-1">
             {children}
+            <Toaster position="top-right" richColors />
           </main>
           <Footer />
         </Providers>
