@@ -1,6 +1,6 @@
 
 import React from "react";
-import BookCard from "../books/BookCard";
+import BookCard from "../../books/BookCard";
 import { Sparkles } from "lucide-react";
 
 interface Book {

@@ -19,22 +19,6 @@ export default function AddBookPage() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  const categories = [
-    "Fiction",
-    "Self-Help",
-    "Finance",
-    "Programming",
-    "Fantasy",
-    "Science",
-    "History",
-    "Biography",
-    "Romance",
-    "Education",
-    "Technology",
-    "Philosophy",
-    "Business",
-  ];
-
   const [formData, setFormData] = useState({
     bookName: "",
     author: "",
