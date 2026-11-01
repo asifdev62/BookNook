@@ -1,5 +1,5 @@
 "use client";
-
+import { CiEdit } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,20 +64,18 @@ export default function ProfilePage() {
     fetchProfile();
   }, [session?.user?.email]);
 
- 
-if (isPending || loading) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#FAF9F6] dark:bg-[#172A3A]">
-      <Loader2 className="animate-spin text-[#C59D5F]" size={35} />
 
-      <h3 className="text-sm font-medium text-[#172A3A] dark:text-white">
-        Please Wait...
-      </h3>
-    </div>
-  );
-}
+  if (isPending || loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#FAF9F6] dark:bg-[#172A3A]">
+        <Loader2 className="animate-spin text-[#C59D5F]" size={35} />
 
- 
+        <h3 className="text-sm font-medium text-[#172A3A] dark:text-white">
+          Please Wait...
+        </h3>
+      </div>
+    );
+  }
 
 
   return (
@@ -106,16 +104,20 @@ if (isPending || loading) {
                 My Profile
               </p>
 
-              <h1 className="text-3xl font-bold">
-                {user?.name}
-              </h1>
+              <h1 className="text-3xl font-bold">{user?.name}</h1>
 
               <p className="mt-2 flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-300 sm:justify-start">
                 <Mail size={16} />
                 {user?.email}
               </p>
             </div>
+
+            <Link href={"/userProfileUpdate"} className="flex shrink-0 items-center gap-2 border border-[#C59D5F] px-4 py-2 text-sm font-medium text-[#172A3A] transition hover:bg-[#C59D5F]/10 dark:text-white">
+              <CiEdit size={20} />
+              Edit Profile
+            </Link>
           </div>
+
         </section>
 
         {/* Statistics */}
