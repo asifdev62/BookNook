@@ -8,14 +8,15 @@ import {
   BookOpen,
   CalendarDays,
   Loader2,
-  RotateCcw,
   Eye,
   ArrowUpRight,
   Library,
 } from "lucide-react";
 
 import { authClient } from "@/app/lib/auth-client";
+import { API_URL } from "@/app/lib/api";
 import { toast } from "sonner";
+import ReturnButton from "./ReturnButtob";
 
 interface Book {
   _id: string;
@@ -31,36 +32,52 @@ export default function MyBorrowsPage() {
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [returningId, setReturningId] = useState("");
+
+  const email = session?.user?.email;
 
   // Get Borrowed Books
   useEffect(() => {
-    if (isPending || !session?.user?.email) return;
+    if (isPending || !email) return;
+
+    let isMounted = true;
 
     const getBooks = async () => {
       try {
-        const email = encodeURIComponent(session.user.email);
-
         const response = await fetch(
-          `http://localhost:5000/my-borrows?email=${email}`
+          `${API_URL}/my-borrows?email=${encodeURIComponent(email)}`
         );
 
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error("Failed to load books");
+          throw new Error(data.message || "Failed to load books");
         }
 
-        const data = await response.json();
-        setBooks(data);
+        if (isMounted) {
+          setBooks(
+            Array.isArray(data) ? data : data.borrowedBooks || []
+          );
+        }
       } catch (error) {
-        console.log(error);
-        toast.error("Failed to load borrowed books");
+        console.error("Fetch borrowed books error:", error);
+
+        if (isMounted) {
+          setBooks([]);
+          toast.error("Failed to load borrowed books");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     getBooks();
-  }, [session, isPending]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [email, isPending]);
 
   // Return Date
   const getReturnDate = (borrowDate: string) => {
@@ -75,51 +92,8 @@ export default function MyBorrowsPage() {
     });
   };
 
-  // Return Book
-  const handleReturn = async (book: Book) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to return "${book.bookName}"?`
-    );
-
-    if (!confirmed) return;
-
-    try {
-      setReturningId(book._id);
-
-      const response = await fetch(
-        "http://localhost:5000/return-book",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            borrowId: book._id,
-            bookId: book.bookId,
-            userEmail: session?.user?.email,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Return failed");
-      }
-
-      setBooks((previousBooks) =>
-        previousBooks.filter((item) => item._id !== book._id)
-      );
-
-      toast.success("Book returned successfully!");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to return book");
-    } finally {
-      setReturningId("");
-    }
-  };
-
   // Loading
-  if (isPending || (session?.user && loading)) {
+  if (isPending || (email && loading)) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-[#FAF9F6] dark:bg-[#172A3A]">
         <Loader2
@@ -158,16 +132,13 @@ export default function MyBorrowsPage() {
 
   return (
     <main className="min-h-screen bg-[#FAF9F6] px-4 py-10 text-[#172A3A] dark:bg-[#172A3A] dark:text-white sm:px-6 lg:px-8">
-
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
         <section className="relative overflow-hidden border border-[#E8E1D5] bg-white dark:border-white/10 dark:bg-[#1C3548]">
-
           <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#C59D5F]/10 blur-3xl" />
 
           <div className="relative px-5 py-10 sm:px-8 sm:py-16">
-
             <div className="text-center">
 
               <div className="mb-4 inline-flex items-center gap-2 border border-[#C59D5F]/40 bg-[#C59D5F]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#A47B3E] dark:text-[#D9B77C]">
@@ -198,7 +169,6 @@ export default function MyBorrowsPage() {
 
         {/* Books Section */}
         <section className="mt-8 min-h-[55vh] border border-[#E8E1D5] bg-white px-5 py-8 dark:border-white/10 dark:bg-[#1C3548] sm:px-8 sm:py-10">
-
           <div className="mx-auto max-w-7xl">
 
             {books.length === 0 ? (
@@ -228,7 +198,6 @@ export default function MyBorrowsPage() {
               </div>
             ) : (
               <>
-
                 {/* Section Heading */}
                 <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
 
@@ -274,13 +243,12 @@ export default function MyBorrowsPage() {
                             key={book._id}
                             className="border-t border-[#E8E1D5] transition-colors hover:bg-[#FAF9F6] dark:border-white/10 dark:hover:bg-white/5"
                           >
-
                             {/* Book Image */}
                             <td className="px-6 py-4">
                               <Link href={`/books/${book.bookId}`}>
                                 <div className="relative h-20 w-14 overflow-hidden border border-[#E8E1D5] bg-[#F5F0E8] dark:border-white/10 dark:bg-white/10">
                                   <Image
-                                    src={book.image}
+                                    src={book.image || "/placeholder.png"}
                                     alt={book.bookName}
                                     fill
                                     className="object-contain p-1 transition-transform duration-300 hover:scale-105"
@@ -349,29 +317,21 @@ export default function MyBorrowsPage() {
                                 </Link>
 
                                 {/* Return Book */}
-                                <button
-                                  type="button"
-                                  onClick={() => handleReturn(book)}
-                                  disabled={returningId === book._id}
-                                  className="inline-flex items-center gap-2 bg-[#172A3A] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#C59D5F] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#C59D5F] dark:text-[#172A3A] dark:hover:bg-[#E0BD80]"
-                                >
-                                  {returningId === book._id ? (
-                                    <Loader2
-                                      size={14}
-                                      className="animate-spin"
-                                    />
-                                  ) : (
-                                    <RotateCcw size={14} />
-                                  )}
-
-                                  {returningId === book._id
-                                    ? "Returning..."
-                                    : "Return Book"}
-                                </button>
+                                <ReturnButton
+                                  borrowId={book._id}
+                                  bookName={book.bookName}
+                                  email={email}
+                                  onSuccess={(borrowId) => {
+                                    setBooks((previousBooks) =>
+                                      previousBooks.filter(
+                                        (item) => item._id !== borrowId
+                                      )
+                                    );
+                                  }}
+                                />
 
                               </div>
                             </td>
-
                           </tr>
                         ))}
                       </tbody>
@@ -386,13 +346,11 @@ export default function MyBorrowsPage() {
                   </div>
 
                 </div>
-
               </>
             )}
 
           </div>
         </section>
-
       </div>
     </main>
   );

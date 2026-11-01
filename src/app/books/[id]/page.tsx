@@ -301,7 +301,7 @@ export default async function BookDetailPage({
 
                                         {isAvailable
                                             ? `${book.availableCopies} Copies Available`
-                                            : "Out of Stock"}
+                                            : "Unavailable"}
                                     </span>
                                 </div>
                             </div>

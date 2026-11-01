@@ -2,9 +2,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ShoppingBag, ArrowUpRight } from "lucide-react";
 import { authClient } from "@/app/lib/auth-client";
 import { toast } from "sonner";
+import { API_URL } from "@/app/lib/api";
 
 interface BorrowButtonProps {
   book: {
@@ -17,6 +19,7 @@ interface BorrowButtonProps {
 }
 
 export default function BorrowButton({ book }: BorrowButtonProps) {
+  const router = useRouter();
   const { data: session } = authClient.useSession();
   const [loading, setLoading] = useState(false);
 
@@ -25,60 +28,61 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
   const borrowBook = async () => {
     // Login Check
     if (!session?.user) {
-      toast.error("Please login first");
+      toast.error("Please sign in to borrow a book.");
       return;
     }
 
     // Availability Check
     if (!isAvailable) {
-      toast.error("This book is currently unavailable!");
+      toast.error("This book is currently unavailable.");
       return;
     }
 
     try {
       setLoading(true);
 
-      const borrowData = {
-        bookId: book._id,
-        bookName: book.bookName,
-        author: book.author,
-        image: book.image,
-        userEmail: session.user.email,
-        borrowDate: new Date().toISOString(),
-      };
+      const response = await fetch(`${API_URL}/my-borrows`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    bookId: book._id,
+    bookName: book.bookName,
+    author: book.author,
+    image: book.image,
+    userEmail: session.user.email,
+  }),
+});
 
-      const response = await fetch(
-        "http://localhost:5000/my-borrows",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(borrowData),
-        }
-      );
+      const data = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
 
-      const data = await response.json();
+      if (response.status === 401) {
+        toast.error(data?.message || "Please sign in to borrow a book.");
+        return;
+      }
 
-      // Already Borrowed Check
       if (response.status === 409) {
-        toast.error("You have already borrowed this book!");
+        toast.error(
+          data?.message || "This book is currently unavailable."
+        );
         return;
       }
 
       // Other Error Check
       if (!response.ok) {
-        throw new Error(data.message || "Borrow failed");
+        throw new Error(data?.message || "Failed to borrow book.");
       }
 
       // Success
-      toast.success("Book borrowed successfully!");
-
-      console.log(data);
-
+      toast.success(data?.message || "Book borrowed successfully!");
+      router.refresh();
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to borrow book");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to borrow book."
+      );
     } finally {
       setLoading(false);
     }

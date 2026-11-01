@@ -152,7 +152,7 @@ export default function BookCard({ book }: BookCardProps) {
 
               {isAvailable
                 ? `${book.availableCopies} Copies`
-                : "Out of Stock"}
+                : "Unavailable"}
             </span>
           </div>
         
