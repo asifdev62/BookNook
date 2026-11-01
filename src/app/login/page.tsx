@@ -8,6 +8,8 @@ import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import AuthShell from "@/app/components/auth/AuthShell";
 import { redirect } from "next/navigation";
 import { authClient } from "../lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,26 +17,62 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
 
-  const handleSignIn = async (e:React.SubmitEvent<HTMLElement>)=>{
+  const handleSignIn = async (e: React.SubmitEvent<HTMLElement>) => {
     e.preventDefault()
-  
+
     const formData = new FormData(e.target)
-    const user = Object.fromEntries(formData.entries()) as {email: string, password: string}
-   
-  
-    const {data, error} = await authClient.signIn.email({
+    const user = Object.fromEntries(formData.entries()) as { email: string, password: string }
+
+
+    const { data, error } = await authClient.signIn.email({
       ...user
     })
-  
-    if(data){
+
+    if (data) {
       redirect('/')
-    
+
     }
-  
-    if(error){
+
+    if (error) {
       console.log(error)
     }
   }
+
+
+  
+const handleSignInWithGoogle = async () => {
+  try {
+    toast.loading("Connecting to Google...", {
+      id: "google-signIn",
+    });
+
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+
+    if (error) {
+      toast.error(error.message || "Google sign-In failed.", {
+        id: "google-signIn",
+      });
+      return;
+    }
+
+    if (data) {
+      toast.success("Redirecting to Google...", {
+        id: "google-signIn",
+      });
+    }
+  } catch (error) {
+    toast.error("Something went wrong. Please try again.", {
+      id: "google-signIn",
+    });
+
+    console.error("Google sign-In exception:", error);
+  }
+};
+
+
   return (
     <AuthShell
       eyebrow="Welcome back"
@@ -143,6 +181,16 @@ export default function LoginPage() {
           By signing in, you agree to keep the library kind and the books
           coming back.
         </p>
+
+        <button
+          onClick={handleSignInWithGoogle}
+          type="button"
+          className="group flex w-full items-center justify-center gap-3 rounded-lg border border-line bg-white px-5 py-3 text-sm font-semibold text-[#293F50] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#D6A85F] hover:bg-[#FAF9F6] hover:shadow-md active:translate-y-0 dark:border-white/15 dark:bg-[#293F50] dark:text-white dark:hover:border-[#D6A85F] dark:hover:bg-[#344E60]"
+        >
+          <FcGoogle className="text-xl transition-transform duration-300 group-hover:scale-110" />
+          <span>Sign In With Google</span>
+        </button>
+
       </form>
     </AuthShell>
   );

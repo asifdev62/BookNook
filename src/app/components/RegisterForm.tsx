@@ -1,6 +1,7 @@
 
 "use client";
 
+import { FcGoogle } from "react-icons/fc";
 import React, { useState } from "react";
 import {
   ArrowRight,
@@ -12,48 +13,80 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { authClient } from "../lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const inputClass =
+    "w-full rounded-lg border border-white/10 bg-[#293F50] py-2.5 pl-10 pr-10 text-sm text-white outline-none transition-all duration-200 placeholder:text-[#A8BAC5] focus:border-[#D6A85F] focus:ring-2 focus:ring-[#D6A85F]/10";
 
-const inputClass =
-  "w-full rounded-lg border border-white/10 bg-[#293F50] py-2.5 pl-10 pr-10 text-sm text-white outline-none transition-all duration-200 placeholder:text-[#A8BAC5] focus:border-[#D6A85F] focus:ring-2 focus:ring-[#D6A85F]/10";
-
-const labelClass = "mb-1 block text-sm font-medium text-[#DCE5E8]";
+  const labelClass = "mb-1 block text-sm font-medium text-[#DCE5E8]";
 
 
-const handleSignUp = async (e:React.SubmitEvent<HTMLElement>)=>{
-  e.preventDefault()
+const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-  const formData = new FormData(e.target)
-  const user = Object.fromEntries(formData.entries()) as {name: string, email: string, password: string}
+  if (password !== confirmPassword) {
+    toast.error("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+    });
+
+    if (error) {
+      toast.error(error.message || "Sign-up failed. Please try again.");
+      return;
+    }
+
+    if (data) {
+      toast.success("Account created successfully!");
+
+      router.push("/");
+    }
+  } catch (error) {
+    toast.error("Something went wrong. Please try again.");
+    console.error("Sign-up error:", error);
+  }
+};
+
+
  
 
-  const {data, error} = await authClient.signUp.email({
-    ...user
-  })
 
-  if(data){
-    redirect('/')
+const handleSignUpWithGoogle = async () => {
+  try {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+
+    if (error) {
+      toast.error(error.message || "Google sign-up failed.");
+      return;
+    }
+
   
+  } catch (error) {
+    toast.error("Something went wrong. Please try again.");
+    console.error("Google sign-up exception:", error);
   }
-
-  if(error){
-    console.log(error)
-  }
-}
+};
 
   return (
-    <form
-      onSubmit={handleSignUp}
-      className="w-full space-y-5"
-    >
+    <form onSubmit={handleSignUp} className="w-full space-y-5">
       {/* Full Name */}
       <div>
         <label htmlFor="name" className={labelClass}>
@@ -194,6 +227,24 @@ const handleSignUp = async (e:React.SubmitEvent<HTMLElement>)=>{
           Your information is securely protected.
         </p>
       </div>
+
+      {/* Divider */}
+      <div className="relative flex items-center py-1">
+        <div className="flex-grow border-t border-white/10" />
+        <span className="mx-4 text-xs text-[#A8BAC5]">OR CONTINUE WITH</span>
+        <div className="flex-grow border-t border-white/10" />
+      </div>
+
+      {/* Google Sign Up */}
+
+<button
+  onClick={handleSignUpWithGoogle}
+  type="button"
+  className="group flex w-full items-center justify-center gap-3 rounded-lg border border-line bg-white px-5 py-3 text-sm font-semibold text-[#293F50] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#D6A85F] hover:bg-[#FAF9F6] hover:shadow-md active:translate-y-0 dark:border-white/15 dark:bg-[#293F50] dark:text-white dark:hover:border-[#D6A85F] dark:hover:bg-[#344E60]"
+>
+  <FcGoogle className="text-xl transition-transform duration-300 group-hover:scale-110" />
+  <span>Sign Up With Google</span>
+</button>
     </form>
   );
 }
