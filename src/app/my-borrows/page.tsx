@@ -1,6 +1,6 @@
 
 "use client";
-
+import { VscCollection } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -201,15 +201,16 @@ export default function MyBorrowsPage() {
                 {/* Section Heading */}
                 <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
 
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B18A4A]">
-                      Your Collection
-                    </p>
+                  <div className="flex flex-col gap-1">
+  <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#B18A4A]">
+    <VscCollection size={18} />
+    Your Collection
+  </p>
 
-                    <h2 className="mt-2 font-serif text-2xl font-bold sm:text-3xl">
-                      Borrowed Books
-                    </h2>
-                  </div>
+  <h2 className="font-serif text-2xl font-bold text-[#172A3A] sm:text-3xl dark:text-white">
+    Borrowed Books
+  </h2>
+</div>
 
                   <Link
                     href="/books"
