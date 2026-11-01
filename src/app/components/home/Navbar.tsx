@@ -281,7 +281,7 @@ export default function Navbar() {
                   <Link
                     href="/profile"
                     onClick={closeMenus}
-                    className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-slate transition hover:bg-paper-2 dark:text-cream-muted dark:hover:bg-white/10"
+                    className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm  transition hover:bg-paper-2 dark:text-cream-muted dark:hover:bg-white/10 text-slate"
                   >
                     <UserRound size={17} aria-hidden="true" />
                     My Profile
@@ -422,9 +422,9 @@ export default function Navbar() {
                 </div>
 
                 <Link
-                  href="/profile"
+                href={"/profile"}
                   onClick={closeMenus}
-                  className="rounded-lg px-4 py-3 text-sm font-semibold text-slate hover:bg-paper-2 dark:text-cream-muted dark:hover:bg-white/10"
+                  className="rounded-lg px-4 py-3 text-sm font-semibold text-slate hover:bg-paper-2 dark:text-cream-muted dark:hover:bg-white/10 text-"
                 >
                   My Profile
                 </Link>
