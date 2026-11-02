@@ -37,35 +37,62 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!email) {
+            toast.error("Please login first!");
+            return;
+        }
+
         setLoading(true);
 
+        // Only send editable fields. The API does `$set: req.body`, so sending
+        // `_id` makes MongoDB reject the update (immutable field), and sending
+        // `userEmail` would let the owner change.
+        const payload = {
+            bookName: formData.bookName,
+            author: formData.author,
+            category: formData.category,
+            rating: formData.rating,
+            image: formData.image,
+            description: formData.description,
+            publishedYear: formData.publishedYear,
+            availableCopies: formData.availableCopies,
+            isNewArrival: formData.isNewArrival,
+        };
+
         try {
+            const params = new URLSearchParams({ email });
+
             const response = await fetch(
-                `${API_URL}/my-books/${book._id}?email=${email}`,
+                `${API_URL}/my-books/${book._id}?${params}`,
                 {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify(payload),
                 }
             );
 
+            const result = await response.json().catch(() => null);
+
             if (!response.ok) {
-                throw new Error("Update failed");
+                throw new Error(result?.message || "Update failed");
             }
 
-            const result = await response.json();
-
-            if (result.matchedCount === 0) {
+            if (result?.matchedCount === 0) {
                 throw new Error("Book not found");
             }
 
-            onUpdate(formData);
+            onUpdate({ ...book, ...payload });
             setOpen(false);
             toast.success("Book updated successfully!");
-        } catch {
-            toast.error("Failed to update book!");
+        } catch (error) {
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to update book!"
+            );
         } finally {
             setLoading(false);
         }
