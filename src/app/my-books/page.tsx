@@ -166,7 +166,13 @@ if (isPending || loading) {
         </div>
 
         {/* Books Section */}
-        <section className="min-h-[55vh] border border-[#E8E1D5] bg-white px-5 py-8 dark:border-white/10 dark:bg-[#1C3548] sm:px-8 sm:py-10">
+        <section
+          className={`border border-[#E8E1D5] bg-white dark:border-white/10 dark:bg-[#1C3548] ${
+            filteredBooks.length === 0
+              ? "min-h-[40vh] px-4 py-6 sm:px-6 sm:py-8"
+              : "min-h-[55vh] px-5 py-8 sm:px-8 sm:py-10"
+          }`}
+        >
           <div className="mx-auto max-w-7xl">
             {books.length === 0 ? (
               <EmptyState
