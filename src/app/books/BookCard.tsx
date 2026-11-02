@@ -88,7 +88,7 @@ export default function BookCard({ book }: BookCardProps) {
       <div className="flex flex-1 flex-col p-5">
 
         {/* Rating and Published Year */}
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <Star
               size={15}
@@ -122,19 +122,19 @@ export default function BookCard({ book }: BookCardProps) {
         </p>
 
         {/* Description */}
-        <p className="mt-4 line-clamp-2 min-h-10 text-sm leading-5 text-gray-500">
+        <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-gray-500">
           {book.description}
         </p>
 
         {/* Decorative Divider */}
-        <div className="my-5 flex items-center gap-2">
+        <div className="my-3 flex items-center gap-2">
           <div className="h-px flex-1 bg-[#EEE8DE]" />
           <BookOpen size={15} className="text-[#C59D5F]" />
           <div className="h-px flex-1 bg-[#EEE8DE]" />
         </div>
 
           {/* Availability */}
-          <div className="text-right mb-3">
+          <div className="text-right mb-2">
             <p className=" text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">
               Availability
             </p>

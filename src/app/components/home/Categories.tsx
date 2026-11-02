@@ -7,10 +7,12 @@ import {
   Lightbulb,
   Sparkles,
 } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
+import { uniqueCategories } from "@/app/lib/categories";
 
 async function getCategories(): Promise<string[]> {
   try {
-    const res = await fetch("http://localhost:5000/categories", {
+    const res = await fetch(`${API_URL}/categories`, {
       cache: "no-store",
     });
 
@@ -20,7 +22,7 @@ async function getCategories(): Promise<string[]> {
 
     const data = await res.json();
 
-    return Array.isArray(data) ? data : [];
+    return uniqueCategories(Array.isArray(data) ? data : []);
   } catch {
     return [];
   }

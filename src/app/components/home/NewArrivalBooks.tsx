@@ -2,6 +2,7 @@
 import React from "react";
 import BookCard from "../../books/BookCard";
 import { Sparkles } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 
 interface Book {
     _id: string;
@@ -18,7 +19,7 @@ interface Book {
 }
 
 const NewArrivalBooks = async () => {
-    const res = await fetch("http://localhost:5000/book", {
+    const res = await fetch(`${API_URL}/book`, {
         cache: "no-store",
     });
     const books: Book[] = await res.json();

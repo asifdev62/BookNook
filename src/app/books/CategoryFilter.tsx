@@ -34,7 +34,7 @@ export default function CategoryFilter({ categories }: CategoryFilterProps) {
       <select
         value={selectedCategory}
         onChange={(event) => handleCategoryChange(event.target.value)}
-        className="w-full appearance-none border border-[#C59D5F]/50 bg-white px-5 py-3.5 pr-11 text-sm text-[#172A3A] outline-none transition focus:border-[#C59D5F]"
+        className="w-full appearance-none border border-[#C59D5F]/50 bg-white px-5 py-3.5 pr-11 text-sm text-[#172A3A] outline-none transition focus:border-[#C59D5F] dark:bg-[#1C3548] dark:text-white"
       >
         {/* This option removes the category from the URL. */}
         <option value="All Categories">All Categories</option>

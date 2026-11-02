@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { authClient } from "@/app/lib/auth-client";
+import { API_URL } from "@/app/lib/api";
 import {
   BookOpen,
   Library,
@@ -29,8 +30,6 @@ interface Book {
   userEmail: string;
   userName?: string;
 }
-
-const API_URL = "http://localhost:5000";
 
 export default function MyBooksPage() {
   const { data: session, isPending } = authClient.useSession();

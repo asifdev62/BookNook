@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/app/lib/auth-client";
+import { API_URL } from "@/app/lib/api";
 import { Loader2, Save, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { RxCross2 } from "react-icons/rx";
@@ -21,7 +22,7 @@ const UserProfileUpdate = () => {
     if (!email) return;
 
     fetch(
-      `http://localhost:5000/user-profile?email=${encodeURIComponent(email)}`
+      `${API_URL}/user-profile?email=${encodeURIComponent(email)}`
     )
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load profile");
@@ -50,7 +51,7 @@ const UserProfileUpdate = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/user-profile?email=${encodeURIComponent(email)}`,
+        `${API_URL}/user-profile?email=${encodeURIComponent(email)}`,
         {
           method: "PUT",
           headers: {

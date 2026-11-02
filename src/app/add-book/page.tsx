@@ -2,10 +2,17 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/app/lib/auth-client";
+import { API_URL } from "@/app/lib/api";
+import {
+  categoryKey,
+  normalizeCategory,
+  resolveCategorySelection,
+  uniqueCategories,
+} from "@/app/lib/categories";
 import {
   BookOpen,
   BookPlus,
@@ -33,6 +40,34 @@ export default function AddBookPage() {
 
   const [form, setForm] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  // Suggest existing categories while still allowing a brand-new one.
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`${API_URL}/categories`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : []))
+      .then((data) => {
+        if (!cancelled) {
+          setCategories(uniqueCategories(Array.isArray(data) ? data : []));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCategories([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const typedCategory = normalizeCategory(formData.category);
+  const matchingCategory = typedCategory
+    ? categories.find(
+        (category) => categoryKey(category) === categoryKey(typedCategory)
+      ) ?? null
+    : null;
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -56,11 +91,64 @@ export default function AddBookPage() {
       return;
     }
 
+    const category = resolveCategorySelection(formData.category, categories);
+
+    if (!category) {
+      setForm("Please choose or enter a category.");
+      return;
+    }
+
+    const title = formData.bookName.trim();
+    const author = formData.author.trim();
+    const description = formData.description.trim();
+    const image = formData.image.trim();
+
+    if (!title || !author || !description || !image) {
+      setForm("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const parsed = new URL(image);
+
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        setForm("Image URL must start with http:// or https://.");
+        return;
+      }
+    } catch {
+      setForm("Please enter a valid image URL.");
+      return;
+    }
+
+    const year = Number(formData.publishedYear);
+    const rating = Number(formData.rating);
+    const copies = Number(formData.availableCopies);
+
+    if (!Number.isInteger(year) || year < 1000 || year > new Date().getFullYear()) {
+      setForm("Please enter a valid published year.");
+      return;
+    }
+
+    if (!Number.isFinite(rating) || rating < 0 || rating > 5) {
+      setForm("Rating must be between 0 and 5.");
+      return;
+    }
+
+    if (!Number.isInteger(copies) || copies < 1) {
+      setForm("Available copies must be at least 1.");
+      return;
+    }
+
     const bookData = {
       ...formData,
-      rating: Number(formData.rating),
-      publishedYear: Number(formData.publishedYear),
-      availableCopies: Number(formData.availableCopies),
+      bookName: title,
+      author,
+      description,
+      image,
+      category,
+      rating,
+      publishedYear: year,
+      availableCopies: copies,
       userName: user.name ?? "",
       userEmail: user.email ?? "",
     };
@@ -68,7 +156,7 @@ export default function AddBookPage() {
     try {
       setSubmitting(true);
 
-      const res = await fetch("http://localhost:5000/add-book", {
+      const res = await fetch(`${API_URL}/add-book`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -284,12 +372,28 @@ export default function AddBookPage() {
               type="text"
               id="category"
               name="category"
+              list="add-book-categories"
               value={formData.category}
               onChange={handleChange}
               className={inputClass}
-              placeholder="Enter book category"
+              placeholder="Choose an existing category or type a new one"
+              autoComplete="off"
               required
             />
+
+            <datalist id="add-book-categories">
+              {categories.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+
+            {matchingCategory && typedCategory && (
+              <p className="mt-1 text-[10px] text-[#D6A85F]">
+                {normalizeCategory(matchingCategory) === typedCategory
+                  ? "Existing category selected."
+                  : `“${matchingCategory}” already exists, so it will be reused instead of creating a duplicate.`}
+              </p>
+            )}
           </div>
 
 

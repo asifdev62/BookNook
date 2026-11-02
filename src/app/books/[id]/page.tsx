@@ -1,4 +1,5 @@
 import BorrowButton from "@/app/components/BorrowButton";
+import { API_URL } from "@/app/lib/api";
 import {
     ArrowLeft,
     ArrowUpRight,
@@ -37,7 +38,7 @@ interface BookDetailPageProps {
 async function getBook(id: string): Promise<Book | null> {
     try {
         const response = await fetch(
-            `http://localhost:5000/book/${encodeURIComponent(id)}`,
+            `${API_URL}/book/${encodeURIComponent(id)}`,
             {
                 cache: "no-store",
             }

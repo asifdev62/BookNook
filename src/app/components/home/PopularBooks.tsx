@@ -1,6 +1,7 @@
 
 import BookCard from "@/app/books/BookCard";
 import { Star } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 import FooterBanner from "./FooterBanner";
 
 interface Book {
@@ -18,7 +19,7 @@ interface Book {
 }
 
 const PopularBooks = async () => {
-    const res = await fetch("http://localhost:5000/popular-books", {
+    const res = await fetch(`${API_URL}/popular-books`, {
         cache: "no-store",
     });
 

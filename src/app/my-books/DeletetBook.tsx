@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Trash2, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
+import { API_URL } from "@/app/lib/api";
 
 interface Book {
   _id: string;
@@ -15,8 +16,6 @@ interface DeleteBookProps {
   email: string;
   onDelete: (id: string) => void;
 }
-
-const API_URL = "http://localhost:5000";
 
 const DeleteBook = ({ book, email, onDelete }: DeleteBookProps) => {
   const [loading, setLoading] = useState(false);
