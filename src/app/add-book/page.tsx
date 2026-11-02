@@ -8,8 +8,6 @@ import Link from "next/link";
 import { authClient } from "@/app/lib/auth-client";
 import { API_URL } from "@/app/lib/api";
 import {
-  categoryKey,
-  normalizeCategory,
   resolveCategorySelection,
   uniqueCategories,
 } from "@/app/lib/categories";
@@ -29,7 +27,7 @@ export default function AddBookPage() {
   const [formData, setFormData] = useState({
     bookName: "",
     author: "",
-    category: "Fiction",
+    category: "",
     rating: "4.5",
     image: "",
     description: "",
@@ -61,13 +59,6 @@ export default function AddBookPage() {
       cancelled = true;
     };
   }, []);
-
-  const typedCategory = normalizeCategory(formData.category);
-  const matchingCategory = typedCategory
-    ? categories.find(
-        (category) => categoryKey(category) === categoryKey(typedCategory)
-      ) ?? null
-    : null;
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -174,7 +165,7 @@ export default function AddBookPage() {
       setFormData({
         bookName: "",
         author: "",
-        category: "Fiction",
+        category: "",
         rating: "4.5",
         image: "",
         description: "",
@@ -372,28 +363,13 @@ export default function AddBookPage() {
               type="text"
               id="category"
               name="category"
-              list="add-book-categories"
               value={formData.category}
               onChange={handleChange}
               className={inputClass}
-              placeholder="Choose an existing category or type a new one"
+              placeholder="Enter category"
               autoComplete="off"
               required
             />
-
-            <datalist id="add-book-categories">
-              {categories.map((category) => (
-                <option key={category} value={category} />
-              ))}
-            </datalist>
-
-            {matchingCategory && typedCategory && (
-              <p className="mt-1 text-[10px] text-[#D6A85F]">
-                {normalizeCategory(matchingCategory) === typedCategory
-                  ? "Existing category selected."
-                  : `“${matchingCategory}” already exists, so it will be reused instead of creating a duplicate.`}
-              </p>
-            )}
           </div>
 
 
