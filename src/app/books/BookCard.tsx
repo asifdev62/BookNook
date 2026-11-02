@@ -66,14 +66,15 @@ export default function BookCard({ book }: BookCardProps) {
 
           {/* New Arrival Badge */}
           {book.isNewArrival && (
-            <span className="absolute left-2 top-2 z-20 flex items-center gap-1.5 bg-[#172A3A] px-1 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-white shadow-md rounded-xl">
+            <span className="absolute left-2 top-2 z-20 flex items-center gap-1.5 bg-[#172A3A] px-1 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-white shadow-md rounded-xl border border-gray-300">
               <span className="h-1.5 w-1.5 rounded-full bg-[#C59D5F]" />
               New Arrival
             </span>
           )}
 
           {/* Category Badge */}
-          <span className="absolute bottom-2 left-2 z-20 border border-[#C59D5F] bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#172A3A] backdrop-blur-sm rounded-xl">
+          <span className="absolute bottom-2 left-2 z-20 border border-gray-300  bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#172A3A] backdrop-blur-sm rounded-xl flex items-center gap-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-gray-400" />
             {book.category}
           </span>
 
@@ -117,7 +118,7 @@ export default function BookCard({ book }: BookCardProps) {
         </Link>
 
         {/* Author */}
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 line-clamp-2 min-h-10 text-sm text-gray-500">
           by <span className="font-medium text-[#8A795F]">{book.author}</span>
         </p>
 
