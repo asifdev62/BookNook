@@ -46,8 +46,8 @@
 //       const email = encodeURIComponent(session.user.email);
 
 //       const [profileRes, booksRes, borrowsRes] = await Promise.all([
-//         fetch(`http://localhost:5000/user-profile?email=${email}`),
-//         fetch(`http://localhost:5000/my-books?email=${email}`),
+//         fetch(`${API_URL}/user-profile?email=${email}`),
+//         fetch(`${API_URL}/my-books?email=${email}`),
 //         fetch("/api/my-borrows"),
 //       ]);
 

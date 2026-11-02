@@ -8,6 +8,7 @@ import {
   Search,
 } from "lucide-react";
 
+import { API_URL } from "@/app/lib/api";
 import BookCard from "./BookCard";
 import CategoryFilter from "./CategoryFilter";
 
@@ -33,7 +34,7 @@ interface AllBooksPageProps {
 
 async function getCategories(): Promise<string[]> {
   try {
-    const res = await fetch("http://localhost:5000/categories", {
+    const res = await fetch(`${API_URL}/categories`, {
       cache: "no-store",
     });
 
@@ -54,8 +55,8 @@ async function getBooks(
 ): Promise<{ books: Book[]; error: string }> {
   try {
     const url = category
-      ? `http://localhost:5000/book?category=${encodeURIComponent(category)}`
-      : "http://localhost:5000/book";
+      ? `${API_URL}/book?category=${encodeURIComponent(category)}`
+      : `${API_URL}/book`;
 
     const res = await fetch(url, {
       cache: "no-store",

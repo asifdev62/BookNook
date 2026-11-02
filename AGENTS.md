@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # BookNook
 
-Next.js 16 App Router frontend for a book-sharing library. Catalog, borrowing, and public-profile data come from a separate API at `http://localhost:5000` (not in this repo); accounts use better-auth + MongoDB. Routes: `/`, `/books`, `/books/[id]`, `/add-book`, `/login`, `/register`, `/my-books`, `/my-borrows`, `/profile`, `/userProfileUpdate`, and `/api/auth/[...all]`.
+Next.js 16 App Router frontend for a book-sharing library. Catalog, borrowing, and public-profile data come from a separate API whose URL is set in `NEXT_PUBLIC_API_URL` (not in this repo); accounts use better-auth + MongoDB. Routes: `/`, `/books`, `/books/[id]`, `/add-book`, `/login`, `/register`, `/my-books`, `/my-borrows`, `/profile`, `/userProfileUpdate`, and `/api/auth/[...all]`.
 
 ## Commands
 
@@ -22,10 +22,10 @@ Next.js 16 App Router frontend for a book-sharing library. Catalog, borrowing, a
 
 ## Runtime prerequisites
 
-- `.env` (gitignored) must provide `MONGODB_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET`.
+- `.env` (gitignored) must provide `MONGODB_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `NEXT_PUBLIC_API_URL`.
 - `src/app/lib/auth.ts` connects to MongoDB database `booknook` and enables email/password plus Google auth. `src/app/api/auth/[...all]/route.ts` exposes it via `toNextJsHandler`.
 - `src/app/lib/auth-client.ts` hardcodes `baseURL: "http://localhost:3000"`; change it if the dev server runs elsewhere.
-- The book API URL is hardcoded as `http://localhost:5000` in every page/component that uses it. There is no env var or Next proxy route; update all call sites together.
+- API calls use `API_URL` from `src/app/lib/api.ts`, which reads `process.env.NEXT_PUBLIC_API_URL`; change the env value rather than editing individual call sites.
 - `NewArrivalBooks` and `PopularBooks` fetch without try/catch, so the API being down breaks `/`. `Categories`, `/books`, and `/books/[id]` handle fetch failures.
 - `next/image` allows only `encrypted-tbn*.gstatic.com`, `covers.openlibrary.org`, `images.unsplash.com`, and `lh3.googleusercontent.com`. Add-book accepts arbitrary image URLs, so other hosts fail at render; add hosts in `next.config.ts`.
 

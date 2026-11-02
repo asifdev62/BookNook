@@ -11,6 +11,7 @@ import {
   Eye,
   ArrowUpRight,
   Library,
+  Search,
 } from "lucide-react";
 
 import { authClient } from "@/app/lib/auth-client";
@@ -32,6 +33,7 @@ export default function MyBorrowsPage() {
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   const email = session?.user?.email;
 
@@ -91,6 +93,16 @@ export default function MyBorrowsPage() {
       year: "numeric",
     });
   };
+
+  // Search Borrowed Books
+  const filteredBooks = books.filter((book) => {
+    const query = search.toLowerCase();
+
+    return (
+      book.bookName?.toLowerCase().includes(query) ||
+      book.author?.toLowerCase().includes(query)
+    );
+  });
 
   // Loading
   if (isPending || (email && loading)) {
@@ -167,8 +179,21 @@ export default function MyBorrowsPage() {
           </div>
         </section>
 
+        {/* Search */}
+        <div className="mb-7 flex items-center gap-3 border border-gray-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-[#172A3A]">
+          <Search className="h-5 w-5 text-[#C59D5F]" />
+
+          <input
+            type="text"
+            placeholder="Search by book name or author..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            className="w-full bg-transparent text-sm outline-none placeholder:text-gray-400"
+          />
+        </div>
+
         {/* Books Section */}
-        <section className="mt-8 min-h-[55vh] border border-[#E8E1D5] bg-white px-5 py-8 dark:border-white/10 dark:bg-[#1C3548] sm:px-8 sm:py-10">
+        <section className="min-h-[55vh] border border-[#E8E1D5] bg-white px-5 py-8 dark:border-white/10 dark:bg-[#1C3548] sm:px-8 sm:py-10">
           <div className="mx-auto max-w-7xl">
 
             {books.length === 0 ? (
@@ -239,7 +264,7 @@ export default function MyBorrowsPage() {
                       </thead>
 
                       <tbody>
-                        {books.map((book) => (
+                        {filteredBooks.map((book) => (
                           <tr
                             key={book._id}
                             className="border-t border-[#E8E1D5] transition-colors hover:bg-[#FAF9F6] dark:border-white/10 dark:hover:bg-white/5"
@@ -335,6 +360,17 @@ export default function MyBorrowsPage() {
                             </td>
                           </tr>
                         ))}
+
+                        {filteredBooks.length === 0 && (
+                          <tr>
+                            <td
+                              colSpan={5}
+                              className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              No matching borrowed books found.
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
 
                     </table>
@@ -342,7 +378,10 @@ export default function MyBorrowsPage() {
 
                   {/* Table Footer */}
                   <div className="flex flex-col justify-between gap-2 border-t border-[#E8E1D5] bg-[#FAF9F6] px-6 py-4 text-xs text-gray-500 dark:border-white/10 dark:bg-[#172A3A] dark:text-gray-400 sm:flex-row">
-                    <p>Showing {books.length} borrowed books</p>
+                    <p>
+                      Showing {filteredBooks.length}
+                      {search ? ` of ${books.length}` : ""} borrowed books
+                    </p>
                     <p>Thank you for reading with BookNook.</p>
                   </div>
 

@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { authClient } from "@/app/lib/auth-client";
 import { API_URL } from "@/app/lib/api";
 import {
@@ -196,7 +197,10 @@ if (isPending || loading) {
                     className="transition hover:bg-[#C59D5F]/5"
                   >
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-4">
+                      <Link
+                        href={`/books/${book._id}`}
+                        className="flex items-center gap-4"
+                      >
                         <div className="relative h-16 w-12 shrink-0 overflow-hidden bg-gray-100 dark:bg-[#101C27]">
                           {book.image ? (
                             <Image
@@ -220,7 +224,7 @@ if (isPending || loading) {
                             {book.author}
                           </p>
                         </div>
-                      </div>
+                      </Link>
                     </td>
 
                     <td className="px-5 py-4">
