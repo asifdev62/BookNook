@@ -16,6 +16,7 @@ import {
 
 import { authClient } from "@/app/lib/auth-client";
 import { API_URL } from "@/app/lib/api";
+import EmptyState from "@/components/EmptyState";
 import { toast } from "sonner";
 import ReturnButton from "./ReturnButtob";
 
@@ -197,30 +198,13 @@ export default function MyBorrowsPage() {
           <div className="mx-auto max-w-7xl">
 
             {books.length === 0 ? (
-              <div className="mx-auto max-w-xl border border-[#E8E1D5] bg-[#FAF9F6] px-6 py-16 text-center shadow-sm dark:border-white/10 dark:bg-white/5">
-
-                <div className="mx-auto flex h-20 w-20 items-center justify-center bg-[#C59D5F]/10">
-                  <BookOpen size={38} className="text-[#C59D5F]" />
-                </div>
-
-                <h2 className="mt-6 font-serif text-2xl font-bold">
-                  No Borrowed Books Yet
-                </h2>
-
-                <p className="mt-3 text-sm leading-7 text-gray-500 dark:text-gray-400">
-                  Your reading journey starts here. Explore our collection and
-                  borrow your favourite books.
-                </p>
-
-                <Link
-                  href="/books"
-                  className="mt-7 inline-flex items-center gap-2 bg-[#172A3A] px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#C59D5F]"
-                >
-                  Explore Books
-                  <ArrowUpRight size={17} />
-                </Link>
-
-              </div>
+              <EmptyState
+                icon={<BookOpen />}
+                title="No Borrowed Books Yet"
+                message="Explore our collection and borrow your favourite books."
+                buttonText="Explore Books"
+                href="/books"
+              />
             ) : (
               <>
                 {/* Section Heading */}
@@ -248,7 +232,14 @@ export default function MyBorrowsPage() {
                 </div>
 
                 {/* Table */}
-                <div className="overflow-hidden border border-[#E8E1D5] bg-white shadow-sm dark:border-white/10 dark:bg-[#172A3A]">
+                {filteredBooks.length === 0 ? (
+                  <EmptyState
+                    icon={<Search />}
+                    title="No Books Found"
+                    message="Try a different keyword"
+                  />
+                ) : (
+                  <div className="overflow-hidden border border-[#E8E1D5] bg-white shadow-sm dark:border-white/10 dark:bg-[#172A3A]">
 
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[850px] text-left">
@@ -360,17 +351,6 @@ export default function MyBorrowsPage() {
                             </td>
                           </tr>
                         ))}
-
-                        {filteredBooks.length === 0 && (
-                          <tr>
-                            <td
-                              colSpan={5}
-                              className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400"
-                            >
-                              No matching borrowed books found.
-                            </td>
-                          </tr>
-                        )}
                       </tbody>
 
                     </table>
@@ -386,6 +366,7 @@ export default function MyBorrowsPage() {
                   </div>
 
                 </div>
+                )}
               </>
             )}
 

@@ -90,8 +90,8 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-   
-    
+
+
     useEffect(() => {
         if (!open) return;
 
@@ -140,9 +140,9 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
     const duplicateCategory =
         categoryMode === "new" && normalizeCategory(newCategory)
             ? categories.find(
-                  (category) =>
-                      categoryKey(category) === categoryKey(newCategory)
-              ) ?? null
+                (category) =>
+                    categoryKey(category) === categoryKey(newCategory)
+            ) ?? null
             : null;
 
     const closeEditor = () => {
@@ -532,20 +532,19 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
                                                 {normalizeCategory(
                                                     newCategory
                                                 ) && (
-                                                    <p
-                                                        className={`mt-1.5 text-[11px] leading-5 ${
-                                                            duplicateCategory
+                                                        <p
+                                                            className={`mt-1.5 text-[11px] leading-5 ${duplicateCategory
                                                                 ? "text-[#8A5A16] dark:text-[#D9B77C]"
                                                                 : "text-[#172A3A]/55 dark:text-white/55"
-                                                        }`}
-                                                    >
-                                                        {duplicateCategory
-                                                            ? `“${duplicateCategory}” already exists, so this book will be saved there.`
-                                                            : `“${normalizeCategory(
-                                                                  newCategory
-                                                              )}” will be added as a new category.`}
-                                                    </p>
-                                                )}
+                                                                }`}
+                                                        >
+                                                            {duplicateCategory
+                                                                ? `“${duplicateCategory}” already exists, so this book will be saved there.`
+                                                                : `“${normalizeCategory(
+                                                                    newCategory
+                                                                )}” will be added as a new category.`}
+                                                        </p>
+                                                    )}
                                             </div>
                                         )}
 

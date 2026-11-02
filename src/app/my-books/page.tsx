@@ -8,12 +8,15 @@ import Link from "next/link";
 import { authClient } from "@/app/lib/auth-client";
 import { API_URL } from "@/app/lib/api";
 import {
+  ArrowUpRight,
   BookOpen,
   Library,
   Search,
   Loader2,
 } from "lucide-react";
+import { VscCollection } from "react-icons/vsc";
 import { toast } from "sonner";
+import EmptyState from "@/components/EmptyState";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeletetBook";
 
@@ -162,125 +165,162 @@ if (isPending || loading) {
           />
         </div>
 
-        {/* Books Table */}
-        {filteredBooks.length === 0 ? (
-          <div className="border border-dashed border-[#C59D5F]/40 px-5 py-16 text-center">
-            <Library className="mx-auto mb-4 h-12 w-12 text-[#C59D5F]" />
+        {/* Books Section */}
+        <section className="min-h-[55vh] border border-[#E8E1D5] bg-white px-5 py-8 dark:border-white/10 dark:bg-[#1C3548] sm:px-8 sm:py-10">
+          <div className="mx-auto max-w-7xl">
+            {books.length === 0 ? (
+              <EmptyState
+                icon={<Library />}
+                title="No Books Added Yet"
+                message="Add your first book to get started."
+                buttonText="Add Your First Book"
+                href="/add-book"
+              />
+            ) : (
+              <>
+                {/* Section Heading */}
+                <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                  <div className="flex flex-col gap-1">
+                    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#B18A4A]">
+                      <VscCollection size={18} />
+                      Your Collection
+                    </p>
 
-            <h2 className="text-xl font-bold">
-              {books.length === 0 ? "No Books Found" : "No Matching Books"}
-            </h2>
+                    <h2 className="font-serif text-2xl font-bold text-[#172A3A] sm:text-3xl dark:text-white">
+                      Added Books
+                    </h2>
+                  </div>
 
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              {books.length === 0
-                ? "You haven't added any books yet."
-                : "Search using a different name."}
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto border border-gray-200 bg-white dark:border-white/10 dark:bg-[#172A3A]">
-            <table className="w-full min-w-[850px] text-left">
-              <thead className="bg-[#172A3A] text-xs uppercase tracking-wider text-[#C59D5F]">
-                <tr>
-                  <th className="px-5 py-4">Book</th>
-                  <th className="px-5 py-4">Category</th>
-                  <th className="px-5 py-4">Published</th>
-                  <th className="px-5 py-4">Copies</th>
-                  <th className="px-5 py-4 text-center">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-gray-200 dark:divide-white/10">
-                {filteredBooks.map((book) => (
-                  <tr
-                    key={book._id}
-                    className="transition hover:bg-[#C59D5F]/5"
+                  <Link
+                    href="/books"
+                    className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#A47B3E] transition-colors hover:text-[#C59D5F]"
                   >
-                    <td className="px-5 py-4">
-                      <Link
-                        href={`/books/${book._id}`}
-                        className="flex items-center gap-4"
-                      >
-                        <div className="relative h-16 w-12 shrink-0 overflow-hidden bg-gray-100 dark:bg-[#101C27]">
-                          {book.image ? (
-                            <Image
-                              src={book.image}
-                              alt={book.bookName}
-                              fill
-                              sizes="48px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <BookOpen className="m-auto h-7 w-7" />
-                          )}
-                        </div>
+                    Browse More Books
+                    <ArrowUpRight size={16} />
+                  </Link>
+                </div>
 
-                        <div>
-                          <h3 className="max-w-[250px] font-semibold">
-                            {book.bookName}
-                          </h3>
+                {/* Table */}
+                {filteredBooks.length === 0 ? (
+                  <EmptyState
+                    icon={<Search />}
+                    title="No Books Found"
+                    message="Try a different keyword"
+                  />
+                ) : (
+                  <div className="overflow-hidden border border-[#E8E1D5] bg-white shadow-sm dark:border-white/10 dark:bg-[#172A3A]">
+                    <div className="overflow-x-auto">
+                      <table className="w-full min-w-[850px] text-left">
+                        <thead className="bg-[#F5F0E8] dark:bg-[#213E52]">
+                          <tr className="text-xs font-bold uppercase tracking-wider text-[#172A3A] dark:text-gray-200">
+                            <th className="px-6 py-5">Book</th>
+                            <th className="px-6 py-5">Category</th>
+                            <th className="px-6 py-5">Published</th>
+                            <th className="px-6 py-5">Copies</th>
+                            <th className="px-6 py-5 text-center">Actions</th>
+                          </tr>
+                        </thead>
 
-                          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            {book.author}
-                          </p>
-                        </div>
-                      </Link>
-                    </td>
+                        <tbody>
+                          {filteredBooks.map((book) => (
+                            <tr
+                              key={book._id}
+                              className="border-t border-[#E8E1D5] transition-colors hover:bg-[#FAF9F6] dark:border-white/10 dark:hover:bg-white/5"
+                            >
+                              <td className="px-6 py-4">
+                                <Link
+                                  href={`/books/${book._id}`}
+                                  className="flex items-center gap-4"
+                                >
+                                  <div className="relative h-20 w-14 shrink-0 overflow-hidden border border-[#E8E1D5] bg-[#F5F0E8] dark:border-white/10 dark:bg-white/10">
+                                    {book.image ? (
+                                      <Image
+                                        src={book.image}
+                                        alt={book.bookName}
+                                        fill
+                                        sizes="56px"
+                                        className="object-contain p-1 transition-transform duration-300 hover:scale-105"
+                                      />
+                                    ) : (
+                                      <BookOpen className="m-auto h-7 w-7" />
+                                    )}
+                                  </div>
 
-                    <td className="px-5 py-4">
-                      <span className="border border-[#C59D5F]/40 px-3 py-1 text-xs">
-                        {book.category}
-                      </span>
-                    </td>
+                                  <div>
+                                    <h3 className="max-w-[250px] font-serif font-bold transition-colors hover:text-[#C59D5F]">
+                                      {book.bookName}
+                                    </h3>
 
-                    <td className="px-5 py-4 text-sm">
-                      {book.publishedYear}
-                    </td>
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                      by {book.author}
+                                    </p>
+                                  </div>
+                                </Link>
+                              </td>
 
-                    <td className="px-5 py-4 text-sm">
-                      {book.availableCopies}
-                    </td>
+                              <td className="px-6 py-4">
+                                <span className="border border-[#C59D5F]/40 px-3 py-1 text-xs">
+                                  {book.category}
+                                </span>
+                              </td>
 
-                    {/* Edit and Delete */}
-                    <td className="px-5 py-4">
-                      <div className="flex justify-center gap-2">
-                        <EditBook
-                          book={book}
-                          email={session.user.email}
-                          onUpdate={(updatedBook: Book) => {
-                            setBooks((previousBooks) =>
-                              previousBooks.map((item) =>
-                                item._id === book._id
-                                  ? { ...updatedBook, _id: book._id }
-                                  : item
-                              )
-                            );
-                          }}
-                        />
+                              <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                                {book.publishedYear}
+                              </td>
 
-                        <DeleteBook
-                          book={book}
-                          email={session.user.email}
-                          onDelete={(id: string) => {
-                            setBooks((previousBooks) =>
-                              previousBooks.filter(
-                                (item) => item._id !== id
-                              )
-                            );
-                          }}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                              <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                                {book.availableCopies}
+                              </td>
+
+                              {/* Edit and Delete */}
+                              <td className="px-6 py-4">
+                                <div className="flex items-center justify-center gap-2">
+                                  <EditBook
+                                    book={book}
+                                    email={session.user.email}
+                                    onUpdate={(updatedBook: Book) => {
+                                      setBooks((previousBooks) =>
+                                        previousBooks.map((item) =>
+                                          item._id === book._id
+                                            ? { ...updatedBook, _id: book._id }
+                                            : item
+                                        )
+                                      );
+                                    }}
+                                  />
+
+                                  <DeleteBook
+                                    book={book}
+                                    email={session.user.email}
+                                    onDelete={(id: string) => {
+                                      setBooks((previousBooks) =>
+                                        previousBooks.filter(
+                                          (item) => item._id !== id
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Table Footer */}
+                    <div className="flex flex-col justify-between gap-2 border-t border-[#E8E1D5] bg-[#FAF9F6] px-6 py-4 text-xs text-gray-500 dark:border-white/10 dark:bg-[#172A3A] dark:text-gray-400 sm:flex-row">
+                      <p>
+                        Showing {filteredBooks.length} of {books.length} books
+                      </p>
+                      <p>Thank you for reading with BookNook.</p>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
-        )}
-
-        <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">
-          Showing {filteredBooks.length} of {books.length} books
-        </p>
+        </section>
 
       </div>
     </main>
