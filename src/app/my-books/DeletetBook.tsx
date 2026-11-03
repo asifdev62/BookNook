@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Trash2, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { API_URL } from "@/app/lib/api";
+import { getTokenFromClient } from "../lib/getTokenFromClient";
 
 interface Book {
   _id: string;
@@ -35,10 +36,14 @@ const DeleteBook = ({ book, email, onDelete }: DeleteBookProps) => {
     setLoading(true);
 
     try {
+      const token = await getTokenFromClient ()
       const response = await fetch(
         `${API_URL}/my-books/${book._id}?email=${email}`,
         {
           method: "DELETE",
+          headers:{
+            authorization: `Bearer ${token}`
+          }
         }
       );
 

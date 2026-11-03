@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,6 +17,7 @@ import {
   Mail,
   Library,
 } from "lucide-react";
+import { getTokenFromClient } from "../lib/getTokenFromClient";
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -147,18 +147,21 @@ export default function AddBookPage() {
     try {
       setSubmitting(true);
 
+      const token = await getTokenFromClient()
+
       const res = await fetch(`${API_URL}/add-book`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization:  `Bearer ${token}`
         },
         body: JSON.stringify(bookData),
       });
 
-      const data = await res.json();
+      const result = await res.json();
 
       if (!res.ok) {
-        setForm(data.message || "Failed to add book.");
+        setForm(result.message || "Failed to add book.");
         return;
       }
 

@@ -13,6 +13,7 @@ import {
     resolveCategorySelection,
     uniqueCategories,
 } from "@/app/lib/categories";
+import { getTokenFromClient } from "../lib/getTokenFromClient";
 
 interface Book {
     _id: string;
@@ -118,7 +119,7 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
         };
     }, [open]);
 
-    // Keep the current book category selectable even if the API is unavailable.
+    
     const categoryOptions = useMemo(
         () =>
             uniqueCategories([
@@ -163,7 +164,7 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
         setOpen(true);
     };
 
-    // Close on Escape, but not while a save is running.
+   
     useEffect(() => {
         if (!open) return;
 
@@ -180,7 +181,7 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [open, loading]);
 
-    // Prevent the page behind the modal from scrolling on mobile.
+    
     useEffect(() => {
         if (!open) return;
 
@@ -283,12 +284,15 @@ const EditBook = ({ book, email, onUpdate }: EditBookProps) => {
         try {
             const params = new URLSearchParams({ email });
 
+            const token = await getTokenFromClient()
+
             const response = await fetch(
                 `${API_URL}/my-books/${book._id}?${params}`,
                 {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
+                        authorization: `Bearer ${token}`
                     },
                     body: JSON.stringify(payload),
                 }
