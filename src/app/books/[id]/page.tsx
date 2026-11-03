@@ -12,7 +12,6 @@ import {
     Star,
     UserRound,
 } from "lucide-react";
-import { headers } from "next/headers";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -38,15 +37,11 @@ interface BookDetailPageProps {
 
 async function getBook(id: string): Promise<Book | null> {
 
-    const token = await getTokenFromSever()
 
     try {
         const response = await fetch(
             `${API_URL}/book/${encodeURIComponent(id)}`,
             {
-                headers:{
-                    authorization:`Bearer ${token}`,
-                },
 
                 cache: "no-store",
             }
