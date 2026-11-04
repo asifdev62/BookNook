@@ -11,7 +11,7 @@ export default function CategoryFilter({ categories }: CategoryFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // If there is no category in the URL, show "All Categories".
+ 
   const selectedCategory =
     searchParams.get("category") || "All Categories";
 

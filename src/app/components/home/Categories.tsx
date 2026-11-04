@@ -28,7 +28,7 @@ async function getCategories(): Promise<string[]> {
   }
 }
 
-// Each category gets its own icon, colors, and description.
+
 function getCategoryInfo(name: string) {
   if (name === "Fiction") {
     return {
@@ -111,7 +111,7 @@ export default async function CategoriesPage() {
     <div className="min-h-screen bg-[#FAF9F6] dark:bg-[#172A3A] text-[#172A3A] p-10">
       {/* Hero Section */}
     
-      <section className="relative overflow-hidden bg-white dark:border-white/10 dark:bg-[#1C3548]">
+  <section className="relative overflow-hidden bg-white dark:border-white/10 dark:bg-[#1C3548]">
   <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full border border-[#C59D5F]/20" />
   <div className="absolute -right-6 -top-10 h-36 w-36 rounded-full border border-[#C59D5F]/20" />
 
@@ -215,7 +215,7 @@ export default async function CategoriesPage() {
           </p>
 
           <div className="mt-4 flex items-center justify-between border-t border-[#172A3A]/10 pt-3 dark:border-white/10">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#172A3A]/60 dark:text-white/60">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#172A3A]/60  dark:text-white/60">
               Explore Books
             </span>
 
