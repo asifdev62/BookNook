@@ -178,7 +178,7 @@ export default function ProfilePage() {
 
             <Link
               href="/userProfileUpdate"
-              className="flex shrink-0 items-center gap-2 border border-[#C59D5F] px-4 py-2 text-sm font-medium text-[#172A3A] transition hover:bg-[#C59D5F]/10 dark:text-white"
+              className="flex shrink-0 items-center gap-1 border border-[#C59D5F] p-2 text-sm font-medium text-[#172A3A] transition hover:bg-[#C59D5F]/10 dark:text-white"
             >
               <CiEdit size={20} />
               Edit Profile
