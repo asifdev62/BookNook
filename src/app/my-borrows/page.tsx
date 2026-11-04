@@ -105,17 +105,6 @@ export default function MyBorrowsPage() {
     );
   });
 
-  // Loading
-  if (isPending || (email && loading)) {
-    return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-[#FAF9F6] dark:bg-[#172A3A]">
-        <Loader2
-          size={38}
-          className="animate-spin text-[#C59D5F]"
-        />
-      </div>
-    );
-  }
 
   // Login Check
   if (!session?.user) {
@@ -195,11 +184,10 @@ export default function MyBorrowsPage() {
 
         {/* Books Section */}
         <section
-          className={`border border-[#E8E1D5] bg-white dark:border-white/10 dark:bg-[#1C3548] ${
-            filteredBooks.length === 0
+          className={`border border-[#E8E1D5] bg-white dark:border-white/10 dark:bg-[#1C3548] ${filteredBooks.length === 0
               ? "min-h-[40vh] px-4 py-6 sm:px-6 sm:py-8"
               : "min-h-[55vh] px-5 py-8 sm:px-8 sm:py-10"
-          }`}
+            }`}
         >
           <div className="mx-auto max-w-7xl">
 
@@ -217,15 +205,15 @@ export default function MyBorrowsPage() {
                 <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
 
                   <div className="flex flex-col gap-1">
-  <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#B18A4A]">
-    <VscCollection size={18} />
-    Your Collection
-  </p>
+                    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#B18A4A]">
+                      <VscCollection size={18} />
+                      Your Collection
+                    </p>
 
-  <h2 className="font-serif text-2xl font-bold text-[#172A3A] sm:text-3xl dark:text-white">
-    Borrowed Books
-  </h2>
-</div>
+                    <h2 className="font-serif text-2xl font-bold text-[#172A3A] sm:text-3xl dark:text-white">
+                      Borrowed Books
+                    </h2>
+                  </div>
 
                   <Link
                     href="/books"
@@ -247,131 +235,131 @@ export default function MyBorrowsPage() {
                 ) : (
                   <div className="overflow-hidden border border-[#E8E1D5] bg-white shadow-sm dark:border-white/10 dark:bg-[#172A3A]">
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[850px] text-left">
+                    <div className="overflow-x-auto">
+                      <table className="w-full min-w-[850px] text-left">
 
-                      <thead className="bg-[#F5F0E8] dark:bg-[#213E52]">
-                        <tr className="text-xs font-bold uppercase tracking-wider text-[#172A3A] dark:text-gray-200">
-                          <th className="px-6 py-5">Book</th>
-                          <th className="px-6 py-5">Title</th>
-                          <th className="px-6 py-5">Borrow Date</th>
-                          <th className="px-6 py-5">Return Date</th>
-                          <th className="px-6 py-5 text-center">Actions</th>
-                        </tr>
-                      </thead>
+                        <thead className="bg-[#F5F0E8] dark:bg-[#213E52]">
+                          <tr className="text-xs font-bold uppercase tracking-wider text-[#172A3A] dark:text-gray-200">
+                            <th className="px-6 py-5">Book</th>
+                            <th className="px-6 py-5">Title</th>
+                            <th className="px-6 py-5">Borrow Date</th>
+                            <th className="px-6 py-5">Return Date</th>
+                            <th className="px-6 py-5 text-center">Actions</th>
+                          </tr>
+                        </thead>
 
-                      <tbody>
-                        {filteredBooks.map((book) => (
-                          <tr
-                            key={book._id}
-                            className="border-t border-[#E8E1D5] transition-colors hover:bg-[#FAF9F6] dark:border-white/10 dark:hover:bg-white/5"
-                          >
-                            {/* Book Image */}
-                            <td className="px-6 py-4">
-                              <Link href={`/books/${book.bookId}`}>
-                                <div className="relative h-20 w-14 overflow-hidden border border-[#E8E1D5] bg-[#F5F0E8] dark:border-white/10 dark:bg-white/10">
-                                  <Image
-                                    src={book.image || "/placeholder.png"}
-                                    alt={book.bookName}
-                                    fill
-                                    className="object-contain p-1 transition-transform duration-300 hover:scale-105"
-                                    sizes="56px"
-                                  />
-                                </div>
-                              </Link>
-                            </td>
+                        <tbody>
+                          {filteredBooks.map((book) => (
+                            <tr
+                              key={book._id}
+                              className="border-t border-[#E8E1D5] transition-colors hover:bg-[#FAF9F6] dark:border-white/10 dark:hover:bg-white/5"
+                            >
+                              {/* Book Image */}
+                              <td className="px-6 py-4">
+                                <Link href={`/books/${book.bookId}`}>
+                                  <div className="relative h-20 w-14 overflow-hidden border border-[#E8E1D5] bg-[#F5F0E8] dark:border-white/10 dark:bg-white/10">
+                                    <Image
+                                      src={book.image || "/placeholder.png"}
+                                      alt={book.bookName}
+                                      fill
+                                      className="object-contain p-1 transition-transform duration-300 hover:scale-105"
+                                      sizes="56px"
+                                    />
+                                  </div>
+                                </Link>
+                              </td>
 
-                            {/* Book Title */}
-                            <td className="px-6 py-4">
-                              <Link
-                                href={`/books/${book.bookId}`}
-                                className="font-serif font-bold transition-colors hover:text-[#C59D5F]"
-                              >
-                                {book.bookName}
-                              </Link>
-
-                              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                by {book.author}
-                              </p>
-                            </td>
-
-                            {/* Borrow Date */}
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <CalendarDays
-                                  size={16}
-                                  className="text-[#C59D5F]"
-                                />
-
-                                {new Date(book.borrowDate).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                  }
-                                )}
-                              </div>
-                            </td>
-
-                            {/* Return Date */}
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <CalendarDays
-                                  size={16}
-                                  className="text-[#C59D5F]"
-                                />
-
-                                {getReturnDate(book.borrowDate)}
-                              </div>
-                            </td>
-
-                            {/* Actions */}
-                            <td className="px-6 py-4">
-                              <div className="flex items-center justify-center gap-2">
-
-                                {/* View Book */}
+                              {/* Book Title */}
+                              <td className="px-6 py-4">
                                 <Link
                                   href={`/books/${book.bookId}`}
-                                  className="inline-flex items-center gap-2 border border-[#C59D5F] px-3 py-2 text-xs font-semibold text-[#A47B3E] transition-all hover:bg-[#C59D5F] hover:text-white dark:text-[#D9B77C] dark:hover:text-[#172A3A]"
+                                  className="font-serif font-bold transition-colors hover:text-[#C59D5F]"
                                 >
-                                  <Eye size={14} />
-                                  View Book
+                                  {book.bookName}
                                 </Link>
 
-                                {/* Return Book */}
-                                <ReturnButton
-                                  borrowId={book._id}
-                                  bookName={book.bookName}
-                                  email={email}
-                                  onSuccess={(borrowId) => {
-                                    setBooks((previousBooks) =>
-                                      previousBooks.filter(
-                                        (item) => item._id !== borrowId
-                                      )
-                                    );
-                                  }}
-                                />
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                  by {book.author}
+                                </p>
+                              </td>
 
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
+                              {/* Borrow Date */}
+                              <td className="px-6 py-4">
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                  <CalendarDays
+                                    size={16}
+                                    className="text-[#C59D5F]"
+                                  />
 
-                    </table>
+                                  {new Date(book.borrowDate).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    }
+                                  )}
+                                </div>
+                              </td>
+
+                              {/* Return Date */}
+                              <td className="px-6 py-4">
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                  <CalendarDays
+                                    size={16}
+                                    className="text-[#C59D5F]"
+                                  />
+
+                                  {getReturnDate(book.borrowDate)}
+                                </div>
+                              </td>
+
+                              {/* Actions */}
+                              <td className="px-6 py-4">
+                                <div className="flex items-center justify-center gap-2">
+
+                                  {/* View Book */}
+                                  <Link
+                                    href={`/books/${book.bookId}`}
+                                    className="inline-flex items-center gap-2 border border-[#C59D5F] px-3 py-2 text-xs font-semibold text-[#A47B3E] transition-all hover:bg-[#C59D5F] hover:text-white dark:text-[#D9B77C] dark:hover:text-[#172A3A]"
+                                  >
+                                    <Eye size={14} />
+                                    View Book
+                                  </Link>
+
+                                  {/* Return Book */}
+                                  <ReturnButton
+                                    borrowId={book._id}
+                                    bookName={book.bookName}
+                                    email={email}
+                                    onSuccess={(borrowId) => {
+                                      setBooks((previousBooks) =>
+                                        previousBooks.filter(
+                                          (item) => item._id !== borrowId
+                                        )
+                                      );
+                                    }}
+                                  />
+
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+
+                      </table>
+                    </div>
+
+                    {/* Table Footer */}
+                    <div className="flex flex-col justify-between gap-2 border-t border-[#E8E1D5] bg-[#FAF9F6] px-6 py-4 text-xs text-gray-500 dark:border-white/10 dark:bg-[#172A3A] dark:text-gray-400 sm:flex-row">
+                      <p>
+                        Showing {filteredBooks.length}
+                        {search ? ` of ${books.length}` : ""} borrowed books
+                      </p>
+                      <p>Thank you for reading with BookNook.</p>
+                    </div>
+
                   </div>
-
-                  {/* Table Footer */}
-                  <div className="flex flex-col justify-between gap-2 border-t border-[#E8E1D5] bg-[#FAF9F6] px-6 py-4 text-xs text-gray-500 dark:border-white/10 dark:bg-[#172A3A] dark:text-gray-400 sm:flex-row">
-                    <p>
-                      Showing {filteredBooks.length}
-                      {search ? ` of ${books.length}` : ""} borrowed books
-                    </p>
-                    <p>Thank you for reading with BookNook.</p>
-                  </div>
-
-                </div>
                 )}
               </>
             )}

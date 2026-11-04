@@ -100,18 +100,6 @@ export default function ProfilePage() {
     };
   }, [email, isPending]);
 
-  // Loading
-  if (isPending || (email && loading)) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#FAF9F6] dark:bg-[#172A3A]">
-        <Loader2 className="animate-spin text-[#C59D5F]" size={35} />
-
-        <h3 className="text-sm font-medium text-[#172A3A] dark:text-white">
-          Please Wait...
-        </h3>
-      </div>
-    );
-  }
 
   // Login Check
   if (!session?.user) {
