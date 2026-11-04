@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   BookOpen,
   CalendarDays,
-  Loader2,
   Eye,
   ArrowUpRight,
   Library,
@@ -16,6 +15,7 @@ import {
 
 import { authClient } from "@/app/lib/auth-client";
 import { API_URL } from "@/app/lib/api";
+import Loading from "@/app/loading";
 import EmptyState from "@/components/EmptyState";
 import { toast } from "sonner";
 import ReturnButton from "./ReturnButtob";
@@ -105,17 +105,9 @@ export default function MyBorrowsPage() {
     );
   });
 
-    // Loading
+  // Loading
   if (loading) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#FAF9F6] dark:bg-[#172A3A]">
-        <Loader2 className="animate-spin text-[#C59D5F]" size={35} />
-
-        <h3 className="text-sm font-medium text-[#172A3A] dark:text-white">
-          Please Wait...
-        </h3>
-      </div>
-    );
+    return <Loading />;
   }
 
   // Login Check

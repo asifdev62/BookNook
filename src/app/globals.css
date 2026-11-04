@@ -32,6 +32,17 @@
   --color-danger: #c45454;
   --color-danger-light: #ff8585;
   --color-danger-bg: #fff1f0;
+
+  --animate-loading: loading 1.6s ease-in-out infinite;
+
+  @keyframes loading {
+    0% {
+      transform: translateX(-110%);
+    }
+    100% {
+      transform: translateX(220%);
+    }
+  }
 }
 
 @layer base {
