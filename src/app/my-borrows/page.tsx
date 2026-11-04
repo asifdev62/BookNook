@@ -104,9 +104,9 @@ export default function MyBorrowsPage() {
       book.author?.toLowerCase().includes(query)
     );
   });
-  
+
     // Loading
-  if (isPending) {
+  if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#FAF9F6] dark:bg-[#172A3A]">
         <Loader2 className="animate-spin text-[#C59D5F]" size={35} />
