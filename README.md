@@ -1,6 +1,6 @@
-<div align="center">
+# 📚 BookNook — Book Management Platform
 
-# 📚 BookNook
+<div align="center">
 
 ### Discover Books. Explore Categories. Build Your Reading Journey.
 
@@ -8,7 +8,7 @@ A modern and secure book management platform built with Next.js, TypeScript, Mon
 
 <br />
 
-[🌐 Live Demo](https://book-nook-ivory.vercel.app/) · [💻 Frontend Repository](https://github.com/asifdev62/BookNook.git) · [⚙️ Backend Repository](https://github.com/asifdev62/BookNook-Server.git)
+[🌐 Live Demo](https://book-nook-ivory.vercel.app/) · [💻 Frontend Repository](https://github.com/asifdev62/BookNook) · [⚙️ Backend Repository](https://github.com/asifdev62/BookNook-Server)
 
 <br />
 
@@ -37,7 +37,9 @@ A modern and secure book management platform built with Next.js, TypeScript, Mon
 
 ## 📖 About The Project
 
-**BookNook** is a modern book management platform designed to make discovering and exploring books easier. It provides a clean and user-friendly interface where readers can browse books, explore categories, and view individual book details.
+**BookNook** is a modern book management platform designed to make discovering and exploring books easier.
+
+It provides a clean and user-friendly interface where readers can browse books, explore categories, and view individual book details.
 
 The application uses **JWT-based authentication and Next.js Proxy** to help protect restricted routes and manage access to protected areas.
 
@@ -48,8 +50,10 @@ With a responsive interface, organized book categories, and a separate backend r
 | Resource | Link |
 |---|---|
 | 🌐 Live Website | [BookNook Live Demo](https://book-nook-ivory.vercel.app/) |
-| 💻 Frontend Source Code | [BookNook Frontend](https://github.com/asifdev62/BookNook.git) |
-| ⚙️ Backend Source Code | [BookNook Server](https://github.com/asifdev62/BookNook-Server.git) |
+| 💻 Frontend Source Code | [BookNook Frontend](https://github.com/asifdev62/BookNook) |
+| ⚙️ Backend Source Code | [BookNook Server](https://github.com/asifdev62/BookNook-Server) |
+
+---
 
 ## ✨ Features
 
@@ -64,7 +68,15 @@ With a responsive interface, organized book categories, and a separate backend r
 - 🎨 **Modern UI** — Clean layouts, attractive styling, and intuitive navigation.
 - 🧩 **Reusable Components** — Maintain a structured and reusable component architecture.
 
+---
+
 ## 🛠️ Technology Stack
+
+### Frontend
+
+<p>
+  <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind" alt="Frontend Technologies" />
+</p>
 
 | Technology | Purpose |
 |---|---|
@@ -72,12 +84,33 @@ With a responsive interface, organized book categories, and a separate backend r
 | React | Building interactive user interfaces |
 | TypeScript | Type-safe development |
 | Tailwind CSS | Responsive styling |
-| MongoDB | Database |
-| JWT | Token-based authentication |
 | Next.js Proxy | Request-level checks and route protection |
+| Lucide React | Icons |
+
+### Backend & Database
+
+<p>
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" alt="Backend Technologies" />
+</p>
+
+| Technology | Purpose |
+|---|---|
 | Node.js | Backend JavaScript runtime |
 | Express.js | Backend API framework |
-| Lucide React | Icons |
+| MongoDB | Database |
+| JWT | Token-based authentication |
+
+### Development Tools
+
+<p>
+  <img src="https://skillicons.dev/icons?i=git,github,vscode,vercel" alt="Development Tools" />
+</p>
+
+- Git & GitHub
+- Visual Studio Code
+- Vercel
+
+---
 
 ## 🔒 Security & Authentication
 
@@ -104,7 +137,48 @@ The backend provides a separate API layer for application data and operations. P
 - Avoid exposing sensitive credentials in client-side code.
 - Use secure cookie settings where cookie-based authentication is implemented.
 
-**Note:** Proxy-based checks are not a replacement for backend authorization. Protected API endpoints must independently validate authentication and permissions.
+**Important:** Proxy-based checks are not a replacement for backend authorization. Protected API endpoints must independently validate authentication and permissions.
+
+---
+
+## 🏗️ Project Architecture
+
+BookNook separates its frontend and backend into two repositories.
+
+```text
+                  ┌──────────────────────┐
+                  │        User          │
+                  └──────────┬───────────┘
+                             │
+                             ▼
+                  ┌──────────────────────┐
+                  │   Next.js Frontend   │
+                  │ React + TypeScript   │
+                  └──────────┬───────────┘
+                             │
+                       API Requests
+                             │
+                             ▼
+                  ┌──────────────────────┐
+                  │   Express Backend    │
+                  │       Node.js        │
+                  └──────────┬───────────┘
+                             │
+                             ▼
+                  ┌──────────────────────┐
+                  │       MongoDB        │
+                  │   Application Data   │
+                  └──────────────────────┘
+```
+
+### Repository Structure
+
+| Repository | Responsibility |
+|---|---|
+| BookNook | Frontend, UI, routing, and authentication integration |
+| BookNook-Server | Backend API and database operations |
+
+---
 
 ## 🚀 Getting Started
 
@@ -116,7 +190,8 @@ Make sure you have installed:
 
 - [Node.js](https://nodejs.org/)
 - [Git](https://git-scm.com/)
-- MongoDB or a MongoDB Atlas connection
+- [MongoDB](https://www.mongodb.com/)
+- npm
 
 ### 1. Clone the Frontend Repository
 
@@ -136,19 +211,21 @@ cd BookNook
 npm install
 ```
 
-### 4. Configure Environment Variables
+### 4. Configure Frontend Environment Variables
 
 Create a `.env.local` file in the frontend project root.
 
-Add the environment variables required by your source code. For example:
+Example:
 
 ```env
 NEXT_PUBLIC_API_URL=your_backend_api_url
 ```
 
-Replace the example with your actual deployed backend API URL. The environment variable name must match what the frontend code expects.
+Replace the example with your actual backend API URL.
 
-If the application requires additional environment variables, configure them as well.
+Make sure the environment variable name matches your frontend source code.
+
+Add any additional environment variables required by your authentication configuration.
 
 **Important:** Never commit environment files containing secrets to a public repository.
 
@@ -164,9 +241,11 @@ Open your browser and visit:
 http://localhost:3000
 ```
 
+---
+
 ## ⚙️ Backend Setup
 
-BookNook uses a separate backend repository.
+BookNook uses a separate Express.js backend repository.
 
 ### 1. Clone the Backend Repository
 
@@ -204,17 +283,19 @@ These are example names. Confirm the actual names used in your backend source co
 
 Use the development command configured in your backend's `package.json`.
 
-For example, if the project defines a `dev` script:
+For example:
 
 ```bash
 npm run dev
 ```
 
-Check the backend repository's documentation and scripts for the correct startup command.
+Check the backend repository's scripts for the correct startup command.
 
-## 📂 Project Architecture
+---
 
-BookNook separates its frontend and backend into two repositories.
+## 📂 Project Structure
+
+### Frontend Repository
 
 ```text
 BookNook/
@@ -232,34 +313,43 @@ BookNook/
 └── README.md
 ```
 
-The frontend structure above is illustrative and should be adjusted to match the actual repository.
+### Backend Repository
 
-**Backend Repository:** [BookNook-Server](https://github.com/asifdev62/BookNook-Server.git)
+[BookNook-Server](https://github.com/asifdev62/BookNook-Server)
 
 The backend handles API operations, database integration, and server-side authentication or authorization according to its implementation.
 
+*The frontend structure above is illustrative and should be adjusted to match the actual repository.*
+
+---
+
 ## 🌐 Deployment
 
-The BookNook frontend is available online:
+The BookNook frontend is deployed using Vercel.
 
-**Live Website:** https://book-nook-ivory.vercel.app/
+<details>
+<summary><strong>Deployment Checklist</strong></summary>
 
-When deploying or updating the project:
-
-1. Push your changes to the appropriate GitHub repository.
-2. Configure the frontend and backend deployment environments.
+1. Push changes to the appropriate GitHub repository.
+2. Configure frontend and backend deployment environments.
 3. Add the required environment variables.
 4. Verify the database connection.
 5. Confirm that the frontend points to the correct backend API.
 6. Test authentication and protected routes.
 7. Verify the production build and deployed website.
 
+</details>
+
+**Live Website:** [https://book-nook-ivory.vercel.app/](https://book-nook-ivory.vercel.app/)
+
+---
+
 ## 🎯 What I Learned
 
-This project provides practical experience with:
+This project provided practical experience with:
 
 - Building a full-stack application.
-- Developing a modern interface with Next.js and React.
+- Developing modern interfaces with Next.js and React.
 - Writing type-safe code using TypeScript.
 - Integrating a MongoDB database.
 - Working with JWT-based authentication.
@@ -268,9 +358,9 @@ This project provides practical experience with:
 - Managing environment variables and deployment configuration.
 - Creating reusable and responsive UI components.
 
-## 🔮 Future Improvements
+---
 
-Potential improvements include:
+## 🔮 Future Improvements
 
 - Advanced book search and filtering.
 - Book ratings and reviews.
@@ -278,6 +368,8 @@ Potential improvements include:
 - Reading progress tracking.
 - Enhanced user profiles.
 - Additional authorization and security checks.
+
+---
 
 ## 🤝 Contributing
 
@@ -289,9 +381,31 @@ Suggestions and contributions are welcome.
 4. Commit your changes.
 5. Open a pull request.
 
+---
+
 ## 📄 License
 
 Add a `LICENSE` file if you intend to distribute BookNook under a specific open-source license.
+
+---
+
+## 👨‍💻 Author
+
+<div align="center">
+
+### Asif Ali
+
+**Full-Stack Web Developer**
+
+<a href="https://github.com/asifdev62">
+  <img src="https://img.shields.io/badge/GitHub-asifdev62-181717?style=for-the-badge&logo=github" alt="GitHub" />
+</a>
+
+<br />
+
+[Frontend Repository](https://github.com/asifdev62/BookNook) · [Backend Repository](https://github.com/asifdev62/BookNook-Server) · [Live Website](https://book-nook-ivory.vercel.app/)
+
+</div>
 
 ---
 
@@ -305,6 +419,6 @@ Built with ❤️ using Next.js, TypeScript, and MongoDB.
 
 <br />
 
-[Live Demo](https://book-nook-ivory.vercel.app/) · [Frontend GitHub](https://github.com/asifdev62/BookNook.git) · [Backend GitHub](https://github.com/asifdev62/BookNook-Server.git)
+[🌐 Live Demo](https://book-nook-ivory.vercel.app/) · [💻 Frontend GitHub](https://github.com/asifdev62/BookNook) · [⚙️ Backend GitHub](https://github.com/asifdev62/BookNook-Server)
 
 </div>
